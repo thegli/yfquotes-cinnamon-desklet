@@ -1,4 +1,11 @@
-/* jshint esversion : 6 */
+/*
+ * Yahoo Finance quotes - 0.0.1, May 2018
+ *
+ * Shows stock quotes information provided by Yahoo Finance.
+ * This desklet is based on the work of fthuin's stock desklet.
+ * 
+ */
+/* jshint esversion : 6  */
 const Desklet = imports.ui.desklet; // cinnamon desklet user interface
 const St = imports.gi.St; // Shell toolkit library from GNOME
 const Gio = imports.gi.Gio; // URL-IO-Operations
