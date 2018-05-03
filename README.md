@@ -3,7 +3,7 @@
 ## Description
 This repository contains a [desklet for the Cinnamon desktop environment](https://cinnamon-spices.linuxmint.com/desklets) that displays stock quote information provided by [Yahoo! Finance](https://finance.yahoo.com/).
 
-![Screenshot](sample-default.png)
+![Screenshot](screenshot.png)
 
 This desklet is based on the [desklet from fthuin](https://cinnamon-spices.linuxmint.com/desklets/view/23). The data retrieval part is adopted to an alternative service url, after the Yahoo Finance community table got retired in May 2017.
 
