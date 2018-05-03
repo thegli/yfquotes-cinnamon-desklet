@@ -1,8 +1,9 @@
 # Cinnamon Desklet for Yahoo Finance quotes
 
 ## Description
-
 This repository contains a [desklet for the Cinnamon desktop environment](https://cinnamon-spices.linuxmint.com/desklets) that displays stock quote information provided by [Yahoo! Finance](https://finance.yahoo.com/).
+
+![Screenshot](sample-default.png)
 
 This desklet is based on the [desklet from fthuin](https://cinnamon-spices.linuxmint.com/desklets/view/23). The data retrieval part is adopted to an alternative service url, after the Yahoo Finance community table got retired in May 2017.
 
@@ -23,7 +24,7 @@ Bugfix:
 * change data retrieval to alternative url from Yahoo Finance
  
 Known Limitations:
-* quotes list cannot be edited in the desklet's configuration dialog. TODO document workaround
+* quotes list cannot be edited in the desklet's configuration dialog. As a workaround, export the configuration using the standard desklet settings menu to a (json) file, then edit the file with your favorite text editor, and finally import the configuration file again.
  
 ## Credits
 Based on the desklet source code from [fthuin](https://github.com/fthuin/yahoofinance-cinnamon-desklet).
