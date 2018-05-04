@@ -95,12 +95,13 @@ StockQuotesTable.prototype = {
             cellContents.push(this.createPercentChangeLabel(stockQuote));
         }
 
-        for (var columnIndex = 0; columnIndex < cellContents.length; ++columnIndex)
+        for (var columnIndex = 0; columnIndex < cellContents.length; ++columnIndex) {
             this.el.add(cellContents[columnIndex], {
                 row: rowIndex,
                 col: columnIndex,
                 style_class: "stocks-table-item"
             });
+        }
     },
     createStockSymbolLabel(stockQuote) {
         return new St.Label({
@@ -259,4 +260,3 @@ StockQuoteDesklet.prototype = {
 function main(metadata, id) {
     return new StockQuoteDesklet(metadata, id);
 }
-
