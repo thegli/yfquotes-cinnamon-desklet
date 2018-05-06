@@ -7,13 +7,22 @@ This repository contains a [desklet for the Cinnamon desktop environment](https:
 
 This desklet is based on the [desklet from fthuin](https://cinnamon-spices.linuxmint.com/desklets/view/23). The data retrieval part is adopted to an alternative service url, after the Yahoo Finance community table got retired in May 2017.
 
-Tested with Linux Mint 18.3 (Cinnamon 3.6) and Manjaro (Cinnamon 3.8).
+Tested with Debian 9 (Cinnamon 3.2), Linux Mint 18.3 (Cinnamon 3.6), and Manjaro (Cinnamon 3.8).
 
 ## Installation
 Download the folder **yfquotes@thegli** and copy it to *~/.local/share/cinnamon/desklets/*.
 Check out the desklet configuration settings, and choose the refresh period, the quote details to display, and the list of quotes to show. The default list contains the Dow 30 companies.
 
 ## Release Notes
+
+### current
+
+Features:
+* none so far...
+
+Bugfix:
+* fix "value "nan" of type 'gfloat' is invalid or out of range for property" errors logged in *.xsession-errors*
+* works (again) with Cinnamon 3.2
 
 ### 0.1.0 - May 4, 2018
 
