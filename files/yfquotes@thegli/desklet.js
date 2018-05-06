@@ -1,5 +1,5 @@
 /*
- * Yahoo Finance quotes - 0.1.1
+ * Yahoo Finance quotes - 0.2.0
  *
  * Shows stock quotes information provided by Yahoo Finance.
  * This desklet is based on the work of fthuin's stock desklet.
@@ -190,6 +190,8 @@ StockQuoteDesklet.prototype = {
         this.settings.bindProperty(Settings.BindingDirection.IN, "width", "width", this.onDisplayChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "delayMinutes", "delayMinutes",
                 this.onSettingsChanged, null);
+        this.settings.bindProperty(Settings.BindingDirection.IN, "showLastUpdateTimestamp", "showLastUpdateTimestamp",
+                this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "companySymbols", "companySymbolsText",
                 this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showIcon", "showIcon", this.onSettingsChanged, null);
@@ -213,6 +215,35 @@ StockQuoteDesklet.prototype = {
             "showCurrencyCode" : this.showCurrencyCode,
             "percentChange" : this.showStockPercentChange
         };
+    },
+    formatCurrentTimestamp : function () {
+        var ts = new Date();
+        var tsFormat = "";
+
+        // tsFormat += ts.getDate() + ".";
+        // if (ts.getMonth() < 9) {
+        // tsFormat += "0";
+        // }
+        // tsFormat += (ts.getMonth() + 1) + " ";
+
+        tsFormat += ts.getHours() + ":";
+        if (ts.getMinutes() < 10) {
+            tsFormat += "0";
+        }
+        tsFormat += ts.getMinutes();
+        tsFormat += ":";
+        if (ts.getSeconds() < 10) {
+            tsFormat += "0";
+        }
+        tsFormat += ts.getSeconds();
+
+        return tsFormat;
+    },
+    createLastUpdateLabel : function () {
+        return new St.Label({
+            text : "Updated at " + this.formatCurrentTimestamp(),
+            style_class : "stocks-label"
+        });
     },
     onDisplayChanged : function () {
         this.resize();
@@ -249,6 +280,9 @@ StockQuoteDesklet.prototype = {
             vertical : true
         });
         tableContainer.add_actor(table.el);
+        if (this.showLastUpdateTimestamp) {
+            tableContainer.add_actor(this.createLastUpdateLabel());
+        }
 
         var scrollView = new St.ScrollView();
         scrollView.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
@@ -260,6 +294,7 @@ StockQuoteDesklet.prototype = {
             height : this.height,
             style_class : "stocks-reader"
         });
+
         this.mainBox.add(scrollView, {
             expand : true
         });

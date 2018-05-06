@@ -18,18 +18,18 @@ Check out the desklet configuration settings, and choose the refresh period, the
 ### current
 
 Features:
-* none so far...
+* Show last-update timestamp of data refresh
 
-Bugfix:
+Bugfixes:
 * fix "value "nan" of type 'gfloat' is invalid or out of range for property" errors logged in *.xsession-errors*
 * works (again) with Cinnamon 3.2
 
 ### 0.1.0 - May 4, 2018
 
 Features:
-* setting to show/hide the currency code
+* setting to show/hide the currency symbol
 
-Bugfix:
+Bugfixes:
 * change data retrieval to alternative url from Yahoo Finance
  
 Known Limitations:
