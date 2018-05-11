@@ -21,7 +21,7 @@ Check out the desklet configuration settings, and choose the data refresh period
 Features:
 * show last-update timestamp of data refresh
 * show last trade time/date
-* display severe errors (e.g. network failure) in desklet
+* display severe errors such as network failure
 
 Bugfixes:
 * improve error handling
