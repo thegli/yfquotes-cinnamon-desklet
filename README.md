@@ -1,7 +1,7 @@
 # Cinnamon Desklet for Yahoo Finance quotes
 
 ## Description
-This repository contains a [desklet for the Cinnamon desktop environment](https://cinnamon-spices.linuxmint.com/desklets) that displays stock quote information provided by [Yahoo! Finance](https://finance.yahoo.com/).
+This repository contains a [desklet for the Cinnamon desktop environment](https://cinnamon-spices.linuxmint.com/desklets) that displays stock quote information provided by [Yahoo Finance](https://finance.yahoo.com/).
 
 ![Screenshot](screenshot.png)
 
@@ -20,9 +20,11 @@ Check out the desklet configuration settings, and choose the data refresh period
 ### next
 Features:
 * show last-update timestamp of data refresh
+* show last trade time/date
+* display severe errors (e.g. network failure) in desklet
 
 Bugfixes:
-* none so far
+* improve error handling
 
 ### 0.1.0 - May 6, 2018
 Features:
