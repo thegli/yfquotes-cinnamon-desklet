@@ -15,3 +15,8 @@
     text-align: center;
 }
 
+.error-label {
+    text-align: left;
+    color: #cc0000;
+}
+
