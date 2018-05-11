@@ -1,5 +1,5 @@
 /*
- * Yahoo Finance quotes - 0.2.0
+ * Yahoo Finance quotes - 0.2.0-next
  *
  * Shows stock quotes information provided by Yahoo Finance.
  * This desklet is based on the work of fthuin's stock desklet.
@@ -66,19 +66,8 @@ YahooQueryStockQuoteReader.prototype = {
         // global.log(response);
         return JSON.parse(response);
     },
-    fetchStockQuotes : function (response) {
-        var quotes = [];
-        var dataRows = response.quoteResponse.result;
-        var i = 0;
-        for (var rowIndex = 0; rowIndex < dataRows.length; rowIndex++) {
-            if (dataRows[rowIndex].regularMarketChangePercent === null) {
-                i++;
-            } else {
-                quotes[rowIndex - i] = dataRows[rowIndex];
-            }
-        }
-        
-        return [quotes, response.quoteResponse.error];
+    fetchStockQuotes : function (response) {        
+        return [response.quoteResponse.result, response.quoteResponse.error];
     }
 };
 
@@ -131,8 +120,8 @@ StockQuotesTable.prototype = {
             });
         }
     },
-    existsKey : function(object, key) {
-      return object.hasOwnProperty(key) && object.key !== null;
+    existsProperty : function(object, property) {
+      return object.hasOwnProperty(property) && object[property] !== undefined && object[property] !== null;
     },
     createStockSymbolLabel : function (stockQuote) {
         return new St.Label({
@@ -142,23 +131,23 @@ StockQuotesTable.prototype = {
     },
     createStockPriceLabel : function (stockQuote, withCurrencySymbol) {
         var currencySymbol = "";
-        if (withCurrencySymbol && this.existsKey(stockQuote, "currency")) {
+        if (withCurrencySymbol && this.existsProperty(stockQuote, "currency")) {
             currencySymbol = this.currencyCodeToSymbolMap[stockQuote.currency] || stockQuote.currency;
         }
         return new St.Label({
-            text : currencySymbol + (this.existsKey(stockQuote, "regularMarketPrice") ? this.roundAmount(stockQuote.regularMarketPrice, 2) : "N/A"),
+            text : currencySymbol + (this.existsProperty(stockQuote, "regularMarketPrice") ? this.roundAmount(stockQuote.regularMarketPrice, 2) : "N/A"),
             style_class : "stocks-label"
         });
     },
     createCompanyNameLabel : function (stockQuote) {
         return new St.Label({
-            text : this.existsKey(stockQuote, "shortName") ? stockQuote.shortName : "N/A",
+            text : this.existsProperty(stockQuote, "shortName") ? stockQuote.shortName : "N/A",
             style_class : "stocks-label"
         });
     },
     createPercentChangeIcon : function (stockQuote) {
         var path = "";
-        var percentChange = this.existsKey(stockQuote, "regularMarketChangePercent") ? parseFloat(stockQuote.regularMarketChangePercent) : 0.0;
+        var percentChange = this.existsProperty(stockQuote, "regularMarketChangePercent") ? parseFloat(stockQuote.regularMarketChangePercent) : 0.0;
 
         if (percentChange > 0) {
             path = "/icons/up.svg";
@@ -182,7 +171,7 @@ StockQuotesTable.prototype = {
     },
     createPercentChangeLabel : function (stockQuote) {
         return new St.Label({
-            text : this.existsKey(stockQuote, "regularMarketChangePercent") ? (this.roundAmount(stockQuote.regularMarketChangePercent, 2) + "%") : "N/A",
+            text : this.existsProperty(stockQuote, "regularMarketChangePercent") ? (this.roundAmount(stockQuote.regularMarketChangePercent, 2) + "%") : "N/A",
             style_class : "stocks-label"
         });
     },
@@ -218,7 +207,7 @@ StockQuotesTable.prototype = {
     },
     createTradingTimeLabel : function (stockQuote) {
         return new St.Label({
-            text : this.existsKey(stockQuote, "regularMarketTime") ? this.formatTime(stockQuote.regularMarketTime) : "N/A",
+            text : this.existsProperty(stockQuote, "regularMarketTime") ? this.formatTime(stockQuote.regularMarketTime) : "N/A",
             style_class : "stocks-label"
         });
     }
