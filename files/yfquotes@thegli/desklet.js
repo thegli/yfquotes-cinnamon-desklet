@@ -2,7 +2,7 @@
  * Yahoo Finance quotes - 0.2.0-next
  *
  * Shows stock quotes information provided by Yahoo Finance.
- * This desklet is based on the work of fthuin's stock desklet.
+ * This desklet is based on the work of fthuin's stocks desklet.
  * 
  */
 
@@ -40,7 +40,7 @@ YahooQueryStockQuoteReader.prototype = {
     constructor : YahooQueryStockQuoteReader,
     yahooQueryBaseUrl : "https://query1.finance.yahoo.com/v7/finance/quote?symbols=",
     getStockQuotes : function (quoteSymbols) {
-        var response = this.getYahooQueryResponse(this.createYahooQueryUrl(quoteSymbols));
+        const response = this.getYahooQueryResponse(this.createYahooQueryUrl(quoteSymbols));
         return this.fetchStockQuotes(response);
     },
     createYahooQueryUrl : function (quoteSymbols) {
@@ -49,8 +49,8 @@ YahooQueryStockQuoteReader.prototype = {
     getYahooQueryResponse : function (requestUrl) {
         const errorBegin="{\"quoteResponse\":{\"result\":[],\"error\":\"";
         const errorEnd = "\"}}";
-        var urlcatch = Gio.file_new_for_uri(requestUrl);
-        var response;
+        const urlcatch = Gio.file_new_for_uri(requestUrl);
+        let response;
         
         try {
             let [successful, contents, etag_out] = urlcatch.load_contents(null);
@@ -63,7 +63,6 @@ YahooQueryStockQuoteReader.prototype = {
             response = errorBegin + err + errorEnd;
         }
 
-        // global.log(response);
         return JSON.parse(response);
     },
     fetchStockQuotes : function (response) {        
@@ -86,18 +85,18 @@ StockQuotesTable.prototype = {
         INR : "\u20A8"
     },
     render : function (stockQuotes, settings) {
-        for (var rowIndex = 0, l = stockQuotes.length; rowIndex < l; rowIndex++) {
+        for (let rowIndex = 0, l = stockQuotes.length; rowIndex < l; rowIndex++) {
             this.renderTableRow(stockQuotes[rowIndex], rowIndex, settings);
         }
     },
     renderTableRow : function (stockQuote, rowIndex, shouldShow) {
-        var cellContents = [];
+        let cellContents = [];
 
         if (shouldShow.icon) {
             cellContents.push(this.createPercentChangeIcon(stockQuote));
         }
         if (shouldShow.stockName) {
-            cellContents.push(this.createCompanyNameLabel(stockQuote));
+            cellContents.push(this.createQuoteNameLabel(stockQuote));
         }
         if (shouldShow.stockTicker) {
             cellContents.push(this.createStockSymbolLabel(stockQuote));
@@ -109,10 +108,10 @@ StockQuotesTable.prototype = {
             cellContents.push(this.createPercentChangeLabel(stockQuote));
         }
         if (shouldShow.tradeTime) {
-            cellContents.push(this.createTradingTimeLabel(stockQuote));
+            cellContents.push(this.createTradeTimeLabel(stockQuote));
         }
 
-        for (var columnIndex = 0; columnIndex < cellContents.length; ++columnIndex) {
+        for (let columnIndex = 0; columnIndex < cellContents.length; ++columnIndex) {
             this.el.add(cellContents[columnIndex], {
                 row : rowIndex,
                 col : columnIndex,
@@ -130,7 +129,7 @@ StockQuotesTable.prototype = {
         });
     },
     createStockPriceLabel : function (stockQuote, withCurrencySymbol) {
-        var currencySymbol = "";
+        let currencySymbol = "";
         if (withCurrencySymbol && this.existsProperty(stockQuote, "currency")) {
             currencySymbol = this.currencyCodeToSymbolMap[stockQuote.currency] || stockQuote.currency;
         }
@@ -139,15 +138,23 @@ StockQuotesTable.prototype = {
             style_class : "stocks-label"
         });
     },
-    createCompanyNameLabel : function (stockQuote) {
-        return new St.Label({
+    createQuoteNameLabel : function (stockQuote) {
+        const nameButton = new St.Button();
+        const nameLabel =  new St.Label({
             text : this.existsProperty(stockQuote, "shortName") ? stockQuote.shortName : "N/A",
-            style_class : "stocks-label"
+            style_class : "stocks-label",
+            reactive: true
         });
+        nameButton.add_actor(nameLabel);
+        nameButton.connect("clicked", Lang.bind(this, function() {
+            Gio.app_info_launch_default_for_uri("https://finance.yahoo.com/quote/" + stockQuote.symbol, global.create_app_launch_context());
+
+        }));     
+        return nameButton;
     },
     createPercentChangeIcon : function (stockQuote) {
-        var path = "";
-        var percentChange = this.existsProperty(stockQuote, "regularMarketChangePercent") ? parseFloat(stockQuote.regularMarketChangePercent) : 0.0;
+        const percentChange = this.existsProperty(stockQuote, "regularMarketChangePercent") ? parseFloat(stockQuote.regularMarketChangePercent) : 0.0;
+        let path = "";
 
         if (percentChange > 0) {
             path = "/icons/up.svg";
@@ -157,12 +164,12 @@ StockQuotesTable.prototype = {
             path = "/icons/eq.svg";
         }
 
-        var iconFile = Gio.file_new_for_path(DESKLET_DIR + path);
-        var uri = iconFile.get_uri();
-        var image = St.TextureCache.get_default().load_uri_async(uri, -1, -1);
+        const iconFile = Gio.file_new_for_path(DESKLET_DIR + path);
+        const uri = iconFile.get_uri();
+        const image = St.TextureCache.get_default().load_uri_async(uri, -1, -1);
         image.set_size(20, 20);
 
-        var binIcon = new St.Bin({
+        const binIcon = new St.Bin({
             height : "20",
             width : "20"
         });
@@ -179,33 +186,29 @@ StockQuotesTable.prototype = {
         return Number((amount).toFixed(decimals));
     },
     isToday : function (date) {
-        var today = new Date();
+        const today = new Date();
         return date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth()
                 && date.getDate() === today.getDate();
     },
     formatTime : function (unixTimestamp) {
-        var ts = new Date(unixTimestamp * 1000);
-        var tsFormat = "";
+        const ts = new Date(unixTimestamp * 1000);
+        let tsFormat = "";
+
         if (this.isToday(ts)) {
-            tsFormat = ts.getHours() + ":";
-            if (ts.getMinutes() < 10) {
-                tsFormat += "0";
-            }
-            tsFormat += ts.getMinutes();
+            tsFormat = ts.toLocaleTimeString(undefined, {
+                hour : "numeric",
+                minute : "numeric"
+            });
         } else {
-            if (ts.getDate() < 10) {
-                tsFormat = "0";
-            }
-            tsFormat += ts.getDate() + ".";
-            if (ts.getMonth() < 10) {
-                tsFormat += "0";
-            }
-            tsFormat += (ts.getMonth() + 1);
+            tsFormat = ts.toLocaleDateString(undefined, {
+                month : "numeric",
+                day : "numeric"
+            });
         }
 
         return tsFormat;
     },
-    createTradingTimeLabel : function (stockQuote) {
+    createTradeTimeLabel : function (stockQuote) {
         return new St.Label({
             text : this.existsProperty(stockQuote, "regularMarketTime") ? this.formatTime(stockQuote.regularMarketTime) : "N/A",
             style_class : "stocks-label"
@@ -231,6 +234,8 @@ StockQuoteDesklet.prototype = {
         this.settings = new Settings.DeskletSettings(this, this.metadata.uuid, this.id);
         this.settings.bindProperty(Settings.BindingDirection.IN, "height", "height", this.onDisplayChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "width", "width", this.onDisplayChanged, null);
+        this.settings.bindProperty(Settings.BindingDirection.IN, "transparency", "transparency",
+                this.onDisplayChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "delayMinutes", "delayMinutes",
                 this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showLastUpdateTimestamp", "showLastUpdateTimestamp",
@@ -263,19 +268,13 @@ StockQuoteDesklet.prototype = {
         };
     },
     formatCurrentTimestamp : function () {
-        var ts = new Date();
-        var tsFormat = ts.getHours() + ":";
-        if (ts.getMinutes() < 10) {
-            tsFormat += "0";
-        }
-        tsFormat += ts.getMinutes();
-        tsFormat += ":";
-        if (ts.getSeconds() < 10) {
-            tsFormat += "0";
-        }
-        tsFormat += ts.getSeconds();
+        const now = new Date();
 
-        return tsFormat;
+        return now.toLocaleTimeString(undefined, {
+            hour : "numeric",
+            minute : "numeric",
+            second : "numeric"
+        });
     },
     createLastUpdateLabel : function () {
         return new St.Label({
@@ -290,7 +289,11 @@ StockQuoteDesklet.prototype = {
         });
     },
     onDisplayChanged : function () {
-        this.resize();
+        this.mainBox.set_size(this.width, this.height);
+        this.setTransparency();
+    },
+    setTransparency:function() {
+        this.mainBox.style = "background-color: rgba(0, 0, 0, " + this.transparency + ")";
     },
     onSettingsChanged : function () {
         this.unrender();
@@ -302,22 +305,24 @@ StockQuoteDesklet.prototype = {
         this.removeUpdateTimer();
     },
     onUpdate : function () {
-        var quoteSymbols = this.quoteSymbolsText.split("\n");
+        const quoteSymbols = this.quoteSymbolsText.split("\n");
         try {
-          var stockQuotes = this.stockReader.getStockQuotes(quoteSymbols);
+          let stockQuotes = this.stockReader.getStockQuotes(quoteSymbols);
           this.render(stockQuotes);
           this.setUpdateTimer();
         } catch (err) {
           this.onError(quoteSymbols, err);
         }
     },
+    setUpdateTimer : function () {
+        this.updateLoop = Mainloop.timeout_add(this.delayMinutes * 60 * 1000, Lang.bind(this, this.onUpdate));
+    },
     onError : function (quoteSymbols, err) {
-      global.logError("Cannot get stock quotes for symbols: " + quoteSymbols.join(","));
+      global.logError("Cannot display quotes information for symbols: " + quoteSymbols.join(","));
       global.logError("The following error occurred: " + err);
-      global.logError("Shutting down...");
     },
     render : function (stockQuotes) {
-        var tableContainer = new St.BoxLayout({
+        const tableContainer = new St.BoxLayout({
             vertical : true
         });
         
@@ -325,7 +330,7 @@ StockQuoteDesklet.prototype = {
             tableContainer.add_actor(this.createErrorLabel(stockQuotes[1]));
         }
         
-        var table = new StockQuotesTable();
+        const table = new StockQuotesTable();
         table.render(stockQuotes[0], this.getQuoteDisplaySettings());
         tableContainer.add_actor(table.el);
         
@@ -333,7 +338,7 @@ StockQuoteDesklet.prototype = {
             tableContainer.add_actor(this.createLastUpdateLabel());
         }
 
-        var scrollView = new St.ScrollView();
+        const scrollView = new St.ScrollView();
         scrollView.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
         scrollView.add_actor(tableContainer);
 
@@ -343,6 +348,7 @@ StockQuoteDesklet.prototype = {
             height : this.height,
             style_class : "stocks-reader"
         });
+        this.setTransparency();
 
         this.mainBox.add(scrollView, {
             expand : true
@@ -352,12 +358,6 @@ StockQuoteDesklet.prototype = {
     unrender : function () {
         this.mainBox.destroy_all_children();
         this.mainBox.destroy();
-    },
-    resize : function () {
-        this.mainBox.set_size(this.width, this.height);
-    },
-    setUpdateTimer : function () {
-        this.updateLoop = Mainloop.timeout_add(this.delayMinutes * 60 * 1000, Lang.bind(this, this.onUpdate));
     },
     removeUpdateTimer : function () {
         Mainloop.source_remove(this.updateLoop);

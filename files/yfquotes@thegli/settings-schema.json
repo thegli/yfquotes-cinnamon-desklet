@@ -1,7 +1,17 @@
 {
   "head1": {
     "type": "header",
-    "description": "Desklet layout and Financial data"
+    "description": "Desklet layout"
+  },
+  "width": {
+    "default": 440,
+    "type": "spinbutton",
+    "min": 40,
+    "max": 4000,
+    "description": "Width",
+    "units": "pixels",
+    "step": 20,
+    "tooltip": "Desklet width in pixels."
   },
   "height": {
     "default": 640,
@@ -13,15 +23,18 @@
     "step": 20,
     "tooltip": "Desklet height in pixels."
   },
-  "width": {
-    "default": 440,
-    "type": "spinbutton",
-    "min": 40,
-    "max": 4000,
-    "description": "Width",
-    "units": "pixels",
-    "step": 20,
-    "tooltip": "Desklet width in pixels."
+  "transparency": {
+    "type": "scale",
+    "default": 0.7,
+    "min": 0.0,
+    "max": 1.0,
+    "step": 0.05,
+    "description": "Background transparency",
+    "tooltip": "The higher the value, the more solid the desklet background."
+  },
+  "head2": {
+    "type": "header",
+    "description": "Financial data"
   },
   "delayMinutes": {
     "default": 10,
@@ -41,17 +54,14 @@
   },
   "quoteSymbols": {
     "type": "textview",
-    "height": 200,
+    "height": 150,
     "default": "MMM\nAXP\nAAPL\nBA\nCAT\nCVX\nCSCO\nKO\nDWDP\nXOM\nGE\nGS\nHD\nINTC\nIBM\nJNJ\nJPM\nMCD\nMRK\nMSFT\nNKE\nPFE\nPG\nTRV\nUTX\nUNH\nVZ\nV\nWMT\nDIS",
     "description": "Quote symbols",
     "tooltip": "List the stock quote symbols here, separated with line-breaks."
   },
-  "separator": {
-    "type": "separator"
-  },
-  "head2": {
+  "head3": {
     "type": "header",
-    "description": "Stock quote details"
+    "description": "Quote details"
   },
   "showIcon": {
     "type": "checkbox",
@@ -62,14 +72,14 @@
   "showStockName": {
     "type": "checkbox",
     "default": true,
-    "description": "Show full stock name",
-    "tooltip": "Display the full stock name (eg. International Business Machines)."
+    "description": "Show full quote name",
+    "tooltip": "Display the full stock name (eg. International Business Machines). Click opens quote in browser."
   },
   "showStockSymbol": {
     "type": "checkbox",
     "default": true,
     "description": "Show ticker/symbol",
-    "tooltip": "Display the stock symbol (eg. IBM)."
+    "tooltip": "Display the quote symbol (eg. IBM)."
   },
   "showStockPrice": {
     "type": "checkbox",
@@ -94,6 +104,6 @@
     "type": "checkbox",
     "default": true,
     "description": "Show trading time",
-    "tooltip": "Display the last trading time or date."
+    "tooltip": "Display the last trading time (if current day) or date."
   }
 }
