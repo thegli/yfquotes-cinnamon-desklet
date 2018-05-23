@@ -8,9 +8,9 @@
     "default": 480,
     "min": 40,
     "max": 4000,
+    "step": 20,
     "description": "Width",
     "units": "pixels",
-    "step": 20,
     "tooltip": "Desklet width in pixels."
   },
   "height": {
@@ -18,9 +18,9 @@
     "default": 640,
     "min": 40,
     "max": 4000,
-    "description": "Height",
-    "units": "pixels",
     "step": 20,
+    "units": "pixels",
+    "description": "Height",
     "tooltip": "Desklet height in pixels."
   },
   "transparency": {
@@ -41,9 +41,9 @@
     "default": 10,
     "min": 1,
     "max": 1440,
-    "description": "Update frequency",
-    "units": "minutes",
     "step": 1,
+    "units": "minutes",
+    "description": "Update frequency",
     "tooltip": "Data refresh frequency, in minutes."
   },
   "showLastUpdateTimestamp": {
@@ -63,9 +63,11 @@
     "default": 2,
     "min": 0,
     "max": 12,
-    "dependency": "roundNumbers",
+    "step": 1,
+    "units": "positions",
     "description": "Decimal places to round",
-    "tooltip": "Number of positions to round to after decimal point."
+    "tooltip": "Number of positions to round to after decimal point.",
+    "dependency": "roundNumbers"
   },
   "quoteSymbols": {
     "type": "textview",
@@ -105,9 +107,9 @@
   "showCurrencyCode": {
     "type": "checkbox",
     "default": true,
-    "dependency": "showMarketPrice",
     "description": "Show currency symbol",
-    "tooltip": "Display the currency symbol of the price (eg. $)."
+    "tooltip": "Display the currency symbol of the price (eg. $).",
+    "dependency": "showMarketPrice"
   },
   "showAbsoluteChange": {
     "type": "checkbox",
