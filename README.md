@@ -17,7 +17,7 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
-### next
+### 0.2.0 - May 23, 2018
 Features:
 * show absolute price change amount
 * show last trade time/date

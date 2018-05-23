@@ -1,5 +1,5 @@
 /*
- * Yahoo Finance quotes - 0.2.0-next
+ * Yahoo Finance quotes - 0.2.0
  *
  * Shows financial market information provided by Yahoo Finance.
  * This desklet is based on the work of fthuin's stocks desklet.
