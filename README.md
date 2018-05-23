@@ -1,7 +1,7 @@
 # Cinnamon Desklet for Yahoo Finance quotes
 
 ## Description
-This repository contains a [desklet for the Cinnamon desktop environment](https://cinnamon-spices.linuxmint.com/desklets) that displays stock quote information provided by [Yahoo Finance](https://finance.yahoo.com/).
+This repository contains a [desklet for the Cinnamon desktop environment](https://cinnamon-spices.linuxmint.com/desklets) that displays financial market information provided by [Yahoo Finance](https://finance.yahoo.com/).
 
 ![Screenshot](screenshot.png)
 
