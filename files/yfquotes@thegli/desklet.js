@@ -272,6 +272,10 @@ StockQuoteDesklet.prototype = {
                 this.onSettingsChanged, null);  
         this.settings.bindProperty(Settings.BindingDirection.IN, "quoteSymbols", "quoteSymbolsText",
                 this.onSettingsChanged, null);
+        this.settings.bindProperty(Settings.BindingDirection.IN, "sortCriteria", "sortCriteria",
+                this.onSettingsChanged, null);
+        this.settings.bindProperty(Settings.BindingDirection.IN, "sortDirection", "sortDirection",
+                this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showChangeIcon", "showChangeIcon", this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showQuoteName", "showQuoteName",
                 this.onSettingsChanged, null);
@@ -355,11 +359,37 @@ StockQuoteDesklet.prototype = {
       global.logError("Cannot display quotes information for symbols: " + quoteSymbols.join(","));
       global.logError("The following error occurred: " + err);
     },
+    sortByProperty: function (quotes, prop, direction) {        
+        if (quotes.length < 2) {
+            return quotes;
+        }
+        
+        const clone = quotes.slice(0);
+        clone.sort(function(q1, q2) {
+            let p1 = "";
+            if (q1.hasOwnProperty(prop) && q1[prop] !== undefined && q1[prop] !== null) {
+                p1 = q1[prop].toString().match(/^\d+$/) ? + q1[prop] : q1[prop];
+            }
+            let p2 = "";
+            if (q2.hasOwnProperty(prop) && q2[prop] !== undefined && q2[prop] !== null) {
+                p2 = q2[prop].toString().match(/^\d+$/) ? + q2[prop] : q2[prop];
+            }
+            
+            return ((p1 < p2) ? -1 : ((p1 > p2) ? 1 : 0)) * direction;
+        });
+        return clone;
+    },
     render : function (quotes) {
         const tableContainer = new St.BoxLayout({
             vertical : true
         });
         
+        // optional sort
+        if (this.sortCriteria && this.sortCriteria !== "none") {
+            quotes[0] = this.sortByProperty(quotes[0], this.sortCriteria, this.sortDirection ? 1 : -1);
+        }
+        
+        // in case of errors, show details
         if (quotes[1] !== null) {
             tableContainer.add_actor(this.createErrorLabel(quotes[1]));
         }
