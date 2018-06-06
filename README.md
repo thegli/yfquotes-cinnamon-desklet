@@ -13,7 +13,7 @@ Tested with Linux Mint 17.0 (Cinnamon 2.2), Debian 9 (Cinnamon 3.2), Linux Mint 
 Either follow the installation instructions on [Cinnamon spices](https://cinnamon-spices.linuxmint.com/desklets), or manually download the folder **yfquotes@thegli** (below "files") and copy the folder and its content to *~/.local/share/cinnamon/desklets/*.
 
 ## Configuration
-Check out the desklet configuration settings, and choose the data refresh period, the list of quotes to show (see also [Known Limitations](#known-limitations)), and quote details to display. The default list contains the Dow 30 companies.
+Check out the desklet configuration settings, and choose the data refresh period, the list of quotes to show (see also [Known limitations](#known-limitations)), and quote details to display. The default list contains the Dow 30 companies.
 
 ## Release notes
 
