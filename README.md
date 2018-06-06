@@ -49,7 +49,7 @@ Features:
 Bugfixes:
 * change data retrieval to alternative url from Yahoo Finance
 
-##Known Limitations
+## Known Limitations
 * The quotes list might not be editable using the desklet's configuration dialog (encountered in Cinnamon 3.6 and earlier 3.x versions). As a workaround, export the configuration using the standard desklet settings menu to a (json) file, then edit the file with your favorite text editor, and finally import the configuration file again.
  
 ## Credits
