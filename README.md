@@ -15,7 +15,7 @@ Either follow the installation instructions on [Cinnamon spices](https://cinnamo
 ## Configuration
 Check out the desklet configuration settings, and choose the data refresh period, the list of quotes to show (see also [Known Limitations](#known-limitations)), and quote details to display. The default list contains the Dow 30 companies.
 
-## Release Notes
+## Release notes
 
 ### next
 Features:
@@ -49,7 +49,7 @@ Features:
 Bugfixes:
 * change data retrieval to alternative url from Yahoo Finance
 
-## Known Limitations
+## Known limitations
 * The quotes list might not be editable using the desklet's configuration dialog (encountered in Cinnamon 3.6 and earlier 3.x versions). As a workaround, export the configuration using the standard desklet settings menu to a (json) file, then edit the file with your favorite text editor, and finally import the configuration file again.
  
 ## Credits
