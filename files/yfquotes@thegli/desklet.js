@@ -1,5 +1,5 @@
 /*
- * Yahoo Finance Quotes - 0.2.0
+ * Yahoo Finance Quotes - 0.3.0
  *
  * Shows financial market information provided by Yahoo Finance.
  * This desklet is based on the work of fthuin's stocks desklet.
@@ -53,16 +53,23 @@ YahooFinanceQuoteReader.prototype = {
         const urlcatch = Gio.file_new_for_uri(requestUrl);
         let response;
         
-        try {
-            let [successful, contents, etag_out] = urlcatch.load_contents(null);
-            if (successful) {
-                response = contents.toString();
-            } else {
-                response = errorBegin + "Yahoo Finance service not available!" + errorEnd;
+        const maxRetries = 5;
+        let retries = 0;
+        do {
+            try {
+                let [successful, contents, etag_out] = urlcatch.load_contents(null);
+                if (successful) {
+                    response = contents.toString();
+                    retries = maxRetries;
+                } else {
+                    response = errorBegin + "Yahoo Finance service not available!" + errorEnd;
+                }
+            } catch (err) {
+                response = errorBegin + err + errorEnd;
             }
-        } catch (err) {
-            response = errorBegin + err + errorEnd;
-        }
+            
+            retries++;
+        } while (retries < maxRetries); 
 
         return JSON.parse(response);
     },
