@@ -9,7 +9,7 @@ This desklet is based on the [desklet from fthuin](https://github.com/fthuin/yah
 
 Tested with
 
-- Linux Mint 17 up to 20
+- Linux Mint Cinnamon 17 up to 20
 - Debian 9 with Cinnamon 3.2
 - Manjaro with Cinnamon 3.8
 
