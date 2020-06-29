@@ -9,12 +9,10 @@ This desklet is based on the [desklet from fthuin](https://github.com/fthuin/yah
 
 Tested with
 
-- Linux Mint 17.0 (Cinnamon 2.2)
-- Debian 9 (Cinnamon 3.2)
-- Linux Mint 18.2 (Cinnamon 3.4)
-- Linux Mint 18.3 (Cinnamon 3.6)
-- Manjaro (Cinnamon 3.8)
-- Linux Mint 19.1 (Cinnamon 4.0)
+- Linux Mint 17 up to 20
+- Debian 9 with Cinnamon 3.2
+- Manjaro with Cinnamon 3.8
+
 
 ## Installation
 Either follow the installation instructions on [Cinnamon spices](https://cinnamon-spices.linuxmint.com/desklets), or manually download the folder **yfquotes@thegli** (below "files") and copy the folder and its content to *~/.local/share/cinnamon/desklets/*.
@@ -24,9 +22,10 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
-### 0.3.0
+### 0.3.0 - June 29, 2020
 Features:
 * add setting to sort quotes list
+* update DOW 30 component symbols
 
 Bugfixes:
 * auto-retry in case of connection problem (e.g. TLS handshake)
