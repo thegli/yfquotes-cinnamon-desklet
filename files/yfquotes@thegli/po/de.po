@@ -15,8 +15,8 @@ msgstr ""
 "Language: de\n"
 
 #. metadata.json->description
-msgid "Anzeigen von Finanzmarktinformationen von Yahoo Finance"
-msgstr ""
+msgid "Displays financial market information from Yahoo Finance"
+msgstr "Anzeigen von Finanzmarktinformationen von Yahoo Finance"
 
 #. metadata.json->name
 msgid "Yahoo Finance Quotes"
