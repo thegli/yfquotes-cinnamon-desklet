@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2020-07-06 18:00+0200\n"
-"PO-Revision-Date: 2020-07-06 18:00+0200\n"
+"POT-Creation-Date: 2020-07-17 18:00+0200\n"
+"PO-Revision-Date: 2020-07-17 18:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #. metadata.json->description
 msgid "Displays financial market information from Yahoo Finance"
-msgstr "Anzeigen von Finanzmarktinformationen von Yahoo Finance"
+msgstr "Finanzmarktinformationen anzeigen von Yahoo Finance"
 
 #. metadata.json->name
 msgid "Yahoo Finance Quotes"
@@ -49,7 +49,7 @@ msgstr "Desklet Höhe in Pixeln."
 
 #. settings-schema.json->transparency->description
 msgid "Background transparency"
-msgstr "Hintergrundtransparenz"
+msgstr "Hintergrund Transparenz"
 
 #. settings-schema.json->transparency->tooltip
 msgid "The higher the value, the more solid the desklet background."
@@ -69,7 +69,7 @@ msgstr "Aktualisierungsfrequenz"
 
 #. settings-schema.json->delayMinutes->tooltip
 msgid "Data refresh frequency, in minutes."
-msgstr "Frequenz der Datenaktualisierung, in Minuten"
+msgstr "Frequenz der Datenaktualisierung, in Minuten."
 
 #. settings-schema.json->showLastUpdateTimestamp->description
 msgid "Show last update timestamp"
@@ -97,15 +97,15 @@ msgstr "Kommastellen zu runden"
 
 #. settings-schema.json->decimalPlaces->tooltip
 msgid "Number of positions to round to after decimal point."
-msgstr "Anzahl der Dezimalstellen nach dem Komma auf die gerundet wird."
+msgstr "Anzahl der Dezimalstellen nach dem Komma, auf die gerundet wird."
 
 #. settings-schema.json->quoteSymbols->description
 msgid "Quote symbols"
-msgstr "Instrument-Symbole"
+msgstr "Finanzinstrument-Symbole"
 
 #. settings-schema.json->quoteSymbols->tooltip
 msgid "List the quote symbols here, separated with line-breaks."
-msgstr "Liste der Instrument-Symbole, durch Zeilenumbruch getrennt."
+msgstr "Liste der Symbole von Finanzinstrumenten, durch Zeilenumbruch getrennt."
 
 #. settings-schema.json->sortCriteria->options
 msgid "given order"
@@ -125,11 +125,11 @@ msgstr "Symbol"
 
 #. settings-schema.json->sortCriteria->description
 msgid "Sort list by"
-msgstr "Sortieren nach"
+msgstr "Liste sortieren nach"
 
 #. settings-schema.json->sortCriteria->tooltip
 msgid "Sort the quote list."
-msgstr "Sortieren der Instrumente."
+msgstr "Sortieren der Liste der Finanzinstrumente."
 
 #. settings-schema.json->sortDirection->description
 msgid "Sort in ascending order"
@@ -144,7 +144,7 @@ msgstr "Auswählen für Sortieren in absteigender Reihenfolge, abwählen für "
 
 #. settings-schema.json->head3->description
 msgid "Quote details"
-msgstr "Instrument Details"
+msgstr "Finanzinstrument Details"
 
 #. settings-schema.json->showChangeIcon->description
 msgid "Show change icon"
@@ -152,7 +152,7 @@ msgstr "Änderungssymbol anzeigen"
 
 #. settings-schema.json->showChangeIcon->tooltip
 msgid "Indicates whether the market price moved up, down, or is unchanged."
-msgstr "Zeigt an, ob der Marktpreis höher, tiefer oder unverändert ist."
+msgstr "Zeigt mit einem Symbol an, ob der Marktpreis höher, tiefer oder unverändert ist."
 
 #. settings-schema.json->showQuoteName->description
 msgid "Show verbose name"
@@ -162,8 +162,8 @@ msgstr "Name anzeigen"
 msgid ""
 "Display the quote name (eg. International Business Machines). Click to open "
 "quote in browser."
-msgstr "Zeigt den Namen des Instruments an (z.B. International Business Machines). Anklicken um das Instrument im "
-"Browser zu öffnen."
+msgstr "Zeigt den Namen des Instruments an (z.B. International Business Machines). Anklicken, "
+"um das Instrument im Browser zu öffnen."
 
 #. settings-schema.json->showQuoteSymbol->description
 msgid "Show ticker/symbol"
@@ -175,7 +175,7 @@ msgstr "Zeit das Symbol des Instruments an (z.B. IBM)."
 
 #. settings-schema.json->showMarketPrice->description
 msgid "Show price"
-msgstr "Preis anzeigen"
+msgstr "Marktpreis anzeigen"
 
 #. settings-schema.json->showMarketPrice->tooltip
 msgid "Display the current market price (eg. 146.79)."
@@ -187,7 +187,7 @@ msgstr "Währungssymbol anzeigen"
 
 #. settings-schema.json->showCurrencyCode->tooltip
 msgid "Display the currency symbol of the price (eg. $)."
-msgstr "Zeigt das Währungssymbol zum Preis an (z.B. $)."
+msgstr "Zeigt das Währungssymbol des Preises an (z.B. $)."
 
 #. settings-schema.json->showAbsoluteChange->description
 msgid "Show absolute change"
@@ -211,7 +211,7 @@ msgstr "Handelszeitpunkt anzeigen"
 
 #. settings-schema.json->showTradeTime->tooltip
 msgid "Display the last trading time (if current day) or date."
-msgstr "Zeigt die letzte Handelszeit (falls gleicher Tag) oder den letzten Handelstag an."
+msgstr "Zeigt die letzte Handelszeit (falls heutiger Tag) oder den letzten Handelstag an."
 
 # desklet.js:66
 msgid "Yahoo Finance service not available!"
@@ -227,7 +227,7 @@ msgstr "Fehler: "
 
 # desklet.js:367
 msgid "Cannot display quotes information for symbols: "
-msgstr "Finanzdaten können nicht angezeigt werden für Symbole: "
+msgstr "Finanzdaten können nicht angezeigt werden für die Symbole: "
 
 # desklet.js:368
 msgid "The following error occurred: "
