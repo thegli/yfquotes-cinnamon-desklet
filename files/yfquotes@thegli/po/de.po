@@ -24,7 +24,7 @@ msgstr "Yahoo Finance Quotes"
 
 #. settings-schema.json->head1->description
 msgid "Desklet layout"
-msgstr "Desklet Aussehen"
+msgstr "Desklet Anordnung"
 
 #. settings-schema.json->width->description
 msgid "Width"
@@ -65,19 +65,19 @@ msgstr "Minuten"
 
 #. settings-schema.json->delayMinutes->description
 msgid "Update frequency"
-msgstr "Aktualisierungsrate"
+msgstr "Aktualisierungsfrequenz"
 
 #. settings-schema.json->delayMinutes->tooltip
 msgid "Data refresh frequency, in minutes."
-msgstr "Datenaktualisierungsrate, in Minuten"
+msgstr "Frequenz der Datenaktualisierung, in Minuten"
 
 #. settings-schema.json->showLastUpdateTimestamp->description
 msgid "Show last update timestamp"
-msgstr "Anzeigen des Zuletzt-Aktualisiert Zeitpunktes"
+msgstr "Zeitpunkt der letzten Aktualisierung anzeigen"
 
 #. settings-schema.json->showLastUpdateTimestamp->tooltip
 msgid "Display timestamp when quotes were updated last."
-msgstr "Anzeigen des Zeitpunktes der letzten Datenaktualisierung"
+msgstr "Zeigt den Zeitstempel der letzten Aktualisierung der Finanzdaten an."
 
 #. settings-schema.json->roundNumbers->description
 msgid "Round numbers"
@@ -89,15 +89,15 @@ msgstr "Fliesskommazahlen werden gerundet."
 
 #. settings-schema.json->decimalPlaces->units
 msgid "positions"
-msgstr "Dezimalstellen"
+msgstr "Anzahl Stellen"
 
 #. settings-schema.json->decimalPlaces->description
 msgid "Decimal places to round"
-msgstr "Dezimalstellen zu runden"
+msgstr "Kommastellen zu runden"
 
 #. settings-schema.json->decimalPlaces->tooltip
 msgid "Number of positions to round to after decimal point."
-msgstr "Anzahl der zu rundenden Dezimalstellen nach dem Komma."
+msgstr "Anzahl der Dezimalstellen nach dem Komma auf die gerundet wird."
 
 #. settings-schema.json->quoteSymbols->description
 msgid "Quote symbols"
@@ -105,7 +105,7 @@ msgstr "Instrument-Symbole"
 
 #. settings-schema.json->quoteSymbols->tooltip
 msgid "List the quote symbols here, separated with line-breaks."
-msgstr "Liste der Instrument-Symbole, mit Zeilenumbruch getrennt."
+msgstr "Liste der Instrument-Symbole, durch Zeilenumbruch getrennt."
 
 #. settings-schema.json->sortCriteria->options
 msgid "given order"
@@ -199,7 +199,7 @@ msgstr "Zeigt die absolute Veränderung des Marktpreises an (z.B. +0.739)."
 
 #. settings-schema.json->showPercentChange->description
 msgid "Show percent change"
-msgstr "Prozentualle Veränderung anzeigen"
+msgstr "Prozentuale Veränderung anzeigen"
 
 #. settings-schema.json->showPercentChange->tooltip
 msgid "Display the percent change of the market price (eg. +0.53%)."
