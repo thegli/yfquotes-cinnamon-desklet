@@ -1,0 +1,225 @@
+# German translation for Yahoo Finance Quotes Desklet
+# Copyright (C) 2020 Thomas Egli
+# This file is distributed under the same license as the Yahoo Finance Quotes Desklet package.
+
+msgid ""
+msgstr ""
+
+#. metadata.json->description
+msgid "Anzeigen von Finanzmarktinformationen von Yahoo Finance"
+msgstr ""
+
+#. metadata.json->name
+msgid "Yahoo Finance Quotes"
+msgstr "Yahoo Finance Quotes"
+
+#. settings-schema.json->head1->description
+msgid "Desklet layout"
+msgstr "Desklet Aussehen"
+
+#. settings-schema.json->width->description
+msgid "Width"
+msgstr "Breite"
+
+#. settings-schema.json->width->units
+#. settings-schema.json->height->units
+msgid "pixels"
+msgstr "Pixel"
+
+#. settings-schema.json->width->tooltip
+msgid "Desklet width in pixels."
+msgstr "Desklet Breite in Pixeln."
+
+#. settings-schema.json->height->description
+msgid "Height"
+msgstr "Höhe"
+
+#. settings-schema.json->height->tooltip
+msgid "Desklet height in pixels."
+msgstr "Desklet Höhe in Pixeln."
+
+#. settings-schema.json->transparency->description
+msgid "Background transparency"
+msgstr "Hintergrundtransparenz"
+
+#. settings-schema.json->transparency->tooltip
+msgid "The higher the value, the more solid the desklet background."
+msgstr "Je grösser der Wert, desto deckender der Desklet Hintergrund."
+
+#. settings-schema.json->head2->description
+msgid "Financial data"
+msgstr "Finanzdaten"
+
+#. settings-schema.json->delayMinutes->units
+msgid "minutes"
+msgstr "Minuten"
+
+#. settings-schema.json->delayMinutes->description
+msgid "Update frequency"
+msgstr "Aktualisierungsrate"
+
+#. settings-schema.json->delayMinutes->tooltip
+msgid "Data refresh frequency, in minutes."
+msgstr "Datenaktualisierungsrate, in Minuten"
+
+#. settings-schema.json->showLastUpdateTimestamp->description
+msgid "Show last update timestamp"
+msgstr "Anzeigen des Zuletzt-Aktualisiert Zeitpunktes"
+
+#. settings-schema.json->showLastUpdateTimestamp->tooltip
+msgid "Display timestamp when quotes were updated last."
+msgstr "Anzeigen des Zeitpunktes der letzten Datenaktualisierung"
+
+#. settings-schema.json->roundNumbers->description
+msgid "Round numbers"
+msgstr "Beträge runden"
+
+#. settings-schema.json->roundNumbers->tooltip
+msgid "Perform rounding of floating-point numbers."
+msgstr "Fliesskommazahlen werden gerundet."
+
+#. settings-schema.json->decimalPlaces->units
+msgid "positions"
+msgstr "Dezimalstellen"
+
+#. settings-schema.json->decimalPlaces->description
+msgid "Decimal places to round"
+msgstr "Dezimalstellen zu runden"
+
+#. settings-schema.json->decimalPlaces->tooltip
+msgid "Number of positions to round to after decimal point."
+msgstr "Anzahl der zu rundenden Dezimalstellen nach dem Komma."
+
+#. settings-schema.json->quoteSymbols->description
+msgid "Quote symbols"
+msgstr "Instrument-Symbole"
+
+#. settings-schema.json->quoteSymbols->tooltip
+msgid "List the quote symbols here, separated with line-breaks."
+msgstr "Liste der Instrument-Symbole, mit Zeilenumbruch getrennt."
+
+#. settings-schema.json->sortCriteria->options
+msgid "given order"
+msgstr "Vorgegebene Reihenfolge"
+
+#. settings-schema.json->sortCriteria->options
+msgid "percent change"
+msgstr "Prozentuale Veränderung"
+
+#. settings-schema.json->sortCriteria->options
+msgid "name"
+msgstr "Name"
+
+#. settings-schema.json->sortCriteria->options
+msgid "symbol"
+msgstr "Symbol"
+
+#. settings-schema.json->sortCriteria->description
+msgid "Sort list by"
+msgstr "Sortieren nach"
+
+#. settings-schema.json->sortCriteria->tooltip
+msgid "Sort the quote list."
+msgstr "Sortieren der Instrumente."
+
+#. settings-schema.json->sortDirection->description
+msgid "Sort in ascending order"
+msgstr "Sortiert in absteigender Reihenfolge"
+
+#. settings-schema.json->sortDirection->tooltip
+msgid ""
+"Check to sort quotes in ascending order, uncheck to sort in descending "
+"order."
+msgstr "Auswählen für Sortieren in absteigender Reihenfolge, abwählen für "
+"austeigende Reihenfolge."
+
+#. settings-schema.json->head3->description
+msgid "Quote details"
+msgstr "Instrument Details"
+
+#. settings-schema.json->showChangeIcon->description
+msgid "Show change icon"
+msgstr "Änderungssymbol anzeigen"
+
+#. settings-schema.json->showChangeIcon->tooltip
+msgid "Indicates whether the market price moved up, down, or is unchanged."
+msgstr "Zeigt an, ob der Marktpreis höher, tiefer oder unverändert ist."
+
+#. settings-schema.json->showQuoteName->description
+msgid "Show verbose name"
+msgstr "Name anzeigen"
+
+#. settings-schema.json->showQuoteName->tooltip
+msgid ""
+"Display the quote name (eg. International Business Machines). Click to open "
+"quote in browser."
+msgstr "Zeigt den Namen des Instruments an (z.B. International Business Machines). Anklicken um das Instrument im "
+"Browser zu öffnen."
+
+#. settings-schema.json->showQuoteSymbol->description
+msgid "Show ticker/symbol"
+msgstr "Symbol anzeigen"
+
+#. settings-schema.json->showQuoteSymbol->tooltip
+msgid "Display the quote symbol (eg. IBM)."
+msgstr "Zeit das Symbol des Instruments an (z.B. IBM)."
+
+#. settings-schema.json->showMarketPrice->description
+msgid "Show price"
+msgstr "Preis anzeigen"
+
+#. settings-schema.json->showMarketPrice->tooltip
+msgid "Display the current market price (eg. 146.79)."
+msgstr "Zeigt den aktuellen Marktpreis an (z.B. 146.79)."
+
+#. settings-schema.json->showCurrencyCode->description
+msgid "Show currency symbol"
+msgstr "Währungssymbol anzeigen"
+
+#. settings-schema.json->showCurrencyCode->tooltip
+msgid "Display the currency symbol of the price (eg. $)."
+msgstr "Zeigt das Währungssymbol zum Preis an (z.B. $)."
+
+#. settings-schema.json->showAbsoluteChange->description
+msgid "Show absolute change"
+msgstr "Absolute Veränderung anzeigen"
+
+#. settings-schema.json->showAbsoluteChange->tooltip
+msgid "Display the absolute change of the market price (eg. +0.739)."
+msgstr "Zeigt die absolute Veränderung des Marktpreises an (z.B. +0.739)."
+
+#. settings-schema.json->showPercentChange->description
+msgid "Show percent change"
+msgstr "Prozentualle Veränderung anzeigen"
+
+#. settings-schema.json->showPercentChange->tooltip
+msgid "Display the percent change of the market price (eg. +0.53%)."
+msgstr "Zeigt die relative Veränderung des Marktpreises an (z.B. +0.53%)."
+
+#. settings-schema.json->showTradeTime->description
+msgid "Show trading time"
+msgstr "Handelszeitpunkt anzeigen"
+
+#. settings-schema.json->showTradeTime->tooltip
+msgid "Display the last trading time (if current day) or date."
+msgstr "Zeigt die letzte Handelszeit (falls gleicher Tag) oder den letzten Handelstag an."
+
+# desklet.js:66
+msgid "Yahoo Finance service not available!"
+msgstr "Yahoo Finance Service nicht verfügbar!"
+
+# desklet.js:327
+msgid "Updated at "
+msgstr "Aktualisiert um "
+
+# desklet.js:333
+msgid "Error: "
+msgstr "Fehler: "
+
+# desklet.js:367
+msgid "Cannot display quotes information for symbols: "
+msgstr "Finanzdaten können nicht angezeigt werden für Symbole: "
+
+# desklet.js:368
+msgid "The following error occurred: "
+msgstr "Folgender Fehler ist aufgetreten: "
