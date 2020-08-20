@@ -22,6 +22,10 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
+### 0.4.2 - August 20, 2020
+Bugfixes:
+* update translation files with new setting
+
 ### 0.4.1 - August 18, 2020
 Features:
 * add setting to disable quote name hyperlink
