@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2020-07-17 18:00+0200\n"
-"PO-Revision-Date: 2020-08-20 22:59+0200\n"
+"PO-Revision-Date: 2020-09-20 14:00+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,8 +36,8 @@ msgstr "Folgender Fehler ist aufgetreten: "
 
 
 #. metadata.json->description
-msgid "Displays financial market information from Yahoo Finance"
-msgstr "Finanzmarktinformationen anzeigen von Yahoo Finance"
+msgid "Displays financial market information such as stock quotes and commodity prices from Yahoo Finance"
+msgstr "Zeigt Finanzmarktinformationen wie Aktienkurse und Rohstoffpreise von Yahoo Finance an"
 
 #. metadata.json->name
 msgid "Yahoo Finance Quotes"
