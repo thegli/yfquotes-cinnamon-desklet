@@ -133,7 +133,7 @@ QuotesTable.prototype = {
         }
     },
     existsProperty : function(object, property) {
-      return object.hasOwnProperty(property) && object[property] !== undefined && object[property] !== null;
+      return object.hasOwnProperty(property) && typeof object[property] !== "undefined" && object[property] !== null;
     },
     createQuoteSymbolLabel : function (quote, addLink) {
         const symbolLabel =  new St.Label({
@@ -141,15 +141,15 @@ QuotesTable.prototype = {
             style_class : "quotes-label",
             reactive : addLink ? true : false
         });
-		if (addLink) {
-	        const symbolButton = new St.Button();
-	        symbolButton.add_actor(symbolLabel);
-	        symbolButton.connect("clicked", Lang.bind(this, function() {
-	            Gio.app_info_launch_default_for_uri(YF_PAGE + quote.symbol, global.create_app_launch_context());	
-	        }));
-	        return symbolButton;
+        if (addLink) {
+            const symbolButton = new St.Button();
+            symbolButton.add_actor(symbolLabel);
+            symbolButton.connect("clicked", Lang.bind(this, function() {
+                Gio.app_info_launch_default_for_uri(YF_PAGE + quote.symbol, global.create_app_launch_context());
+            }));
+            return symbolButton;
          } else {
-	        return symbolLabel;
+            return symbolLabel;
          }
     },
     createMarketPriceLabel : function (quote, withCurrencySymbol, decimalPlaces) {
@@ -177,15 +177,15 @@ QuotesTable.prototype = {
             style_class : "quotes-label",
             reactive : addLink ? true : false
         });
-		if (addLink) {
-	        const nameButton = new St.Button();
-	        nameButton.add_actor(nameLabel);
-	        nameButton.connect("clicked", Lang.bind(this, function() {
-	            Gio.app_info_launch_default_for_uri(YF_PAGE + quote.symbol, global.create_app_launch_context());	
-	        }));
-	        return nameButton;
+        if (addLink) {
+            const nameButton = new St.Button();
+            nameButton.add_actor(nameLabel);
+            nameButton.connect("clicked", Lang.bind(this, function() {
+                Gio.app_info_launch_default_for_uri(YF_PAGE + quote.symbol, global.create_app_launch_context());
+            }));
+            return nameButton;
          } else {
-	        return nameLabel;
+            return nameLabel;
          }
     },
     createAbsoluteChangeLabel : function (quote, withCurrencySymbol, decimalPlaces) {
@@ -229,15 +229,15 @@ QuotesTable.prototype = {
         return binIcon;
     },
     createPercentChangeLabel : function (quote, useTrendColors) {
-		let trendClassSuffix = "";
-		if (useTrendColors && this.existsProperty(quote, "regularMarketChangePercent")) {
-			const percentageChange = parseFloat(quote.regularMarketChangePercent);
-			if (percentageChange > 0) {
-				trendClassSuffix = "-up";
-			} else if (percentageChange < 0) {
-				trendClassSuffix = "-down";
-			}
-		}
+        let trendClassSuffix = "";
+        if (useTrendColors && this.existsProperty(quote, "regularMarketChangePercent")) {
+            const percentageChange = parseFloat(quote.regularMarketChangePercent);
+            if (percentageChange > 0) {
+                trendClassSuffix = "-up";
+            } else if (percentageChange < 0) {
+                trendClassSuffix = "-down";
+            }
+        }
         return new St.Label({
             text : this.existsProperty(quote, "regularMarketChangePercent") ? (this.roundAmount(quote.regularMarketChangePercent, 2) + "%") : ABSENT,
             style_class : "quotes-label" + trendClassSuffix
@@ -318,7 +318,7 @@ StockQuoteDesklet.prototype = {
         this.settings.bindProperty(Settings.BindingDirection.IN, "sortDirection", "sortDirection",
                 this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showChangeIcon", "showChangeIcon", 
-				this.onSettingsChanged, null);
+                this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showQuoteName", "showQuoteName",
                 this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "useLongQuoteName", "useLongQuoteName",
@@ -346,15 +346,15 @@ StockQuoteDesklet.prototype = {
         return {
             "changeIcon" : this.showChangeIcon,
             "quoteName" : this.showQuoteName,
-			"useLongName" : this.useLongQuoteName,
-			"linkQuote" : this.linkQuoteName,
+            "useLongName" : this.useLongQuoteName,
+            "linkQuote" : this.linkQuoteName,
             "quoteSymbol" : this.showQuoteSymbol,
-			"linkSymbol" : this.linkQuoteSymbol,
+            "linkSymbol" : this.linkQuoteSymbol,
             "marketPrice" : this.showMarketPrice,
             "currencySymbol" : this.showCurrencyCode,
             "absoluteChange": this.showAbsoluteChange,
             "percentChange" : this.showPercentChange,
-			"colorPercentChange" : this.colorPercentChange,
+            "colorPercentChange" : this.colorPercentChange,
             "tradeTime" : this.showTradeTime,
             "decimalPlaces" : this.roundNumbers ? this.decimalPlaces : -1
         };
@@ -421,11 +421,11 @@ StockQuoteDesklet.prototype = {
         const clone = quotes.slice(0);
         clone.sort(function(q1, q2) {
             let p1 = "";
-            if (q1.hasOwnProperty(prop) && q1[prop] !== undefined && q1[prop] !== null) {
+            if (q1.hasOwnProperty(prop) && typeof q1[prop] !== "undefined" && q1[prop] !== null) {
                 p1 = q1[prop].toString().match(/^\d+$/) ? + q1[prop] : q1[prop];
             }
             let p2 = "";
-            if (q2.hasOwnProperty(prop) && q2[prop] !== undefined && q2[prop] !== null) {
+            if (q2.hasOwnProperty(prop) && typeof q2[prop] !== "undefined" && q2[prop] !== null) {
                 p2 = q2[prop].toString().match(/^\d+$/) ? + q2[prop] : q2[prop];
             }
             
