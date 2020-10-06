@@ -21,6 +21,13 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
+### 0.5.1 - December 18, 2020
+Features:
+- incorporate Danish translation (courtesy of [Alan01](https://github.com/Alan01))
+
+Bugfixes:
+ - resolve various issues reported by Codacy
+
 ### 0.5.0 - October 4, 2020
 Features:
 - new setting to color percentage change according to trend. Enabled by default if percentage change is displayed. Courtesy of [plaihonen](https://github.com/plaihonen).
