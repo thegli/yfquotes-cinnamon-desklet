@@ -456,11 +456,11 @@ StockQuoteDesklet.prototype = {
         const clone = quotes.slice(0);
         clone.sort(function(q1, q2) {
             let p1 = "";
-            if (q1.hasOwnProperty(prop) && typeof q1[prop] !== "undefined" && q1[prop] !== null) {
+            if (this.existsProperty(q1, prop)) {
                 p1 = q1[prop].toString().match(/^\d+$/) ? + q1[prop] : q1[prop];
             }
             let p2 = "";
-            if (q2.hasOwnProperty(prop) && typeof q2[prop] !== "undefined" && q2[prop] !== null) {
+            if (this.existsProperty(q2, prop)) {
                 p2 = q2[prop].toString().match(/^\d+$/) ? + q2[prop] : q2[prop];
             }
             
