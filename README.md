@@ -26,7 +26,7 @@ Features:
 - incorporate Danish translation (courtesy of [Alan01](https://github.com/Alan01))
 
 Bugfixes:
- - resolve various issues reported by Codacy
+- resolve various issues reported by Codacy
 
 ### 0.5.0 - October 4, 2020
 Features:
