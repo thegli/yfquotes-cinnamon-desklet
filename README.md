@@ -8,7 +8,6 @@ This repository contains a [desklet for the Cinnamon desktop environment](https:
 This desklet is based on the [desklet from fthuin](https://github.com/fthuin/yahoofinance-cinnamon-desklet). The data retrieval part is adopted to an alternative service url, after the Yahoo Finance community table got retired in May 2017.
 
 Tested with
-
 - Linux Mint Cinnamon 17 up to 20
 - Debian 9 with Cinnamon 3.2
 - Manjaro with Cinnamon 3.8
@@ -21,11 +20,12 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
-### 0.5.1 - December 18, 2020
+### 0.5.1 - December 20, 2020
 Features:
 - incorporate Danish translation (courtesy of [Alan01](https://github.com/Alan01))
 
 Bugfixes:
+- update DOW 30 component symbols
 - resolve various issues reported by Codacy
 
 ### 0.5.0 - October 4, 2020
