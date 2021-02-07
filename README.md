@@ -20,6 +20,15 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
+### 0.5.2 - February 7, 2021
+Features:
+ - add Italian translation (courtesy of [Dragone2](https://github.com/Dragone2))
+ - add Korean translation (courtesy of [chaeya](https://github.com/chaeya))
+ - optimize png files (courtesy of [NikoKrause](https://github.com/NikoKrause))
+ 
+Bugfixes:
+ - correct a msgid in translation files
+
 ### 0.5.1 - December 20, 2020
 Features:
 - incorporate Danish translation (courtesy of [Alan01](https://github.com/Alan01))
