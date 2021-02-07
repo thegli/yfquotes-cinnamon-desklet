@@ -22,12 +22,12 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ### 0.5.2 - February 7, 2021
 Features:
- - add Italian translation (courtesy of [Dragone2](https://github.com/Dragone2))
- - add Korean translation (courtesy of [chaeya](https://github.com/chaeya))
- - optimize png files (courtesy of [NikoKrause](https://github.com/NikoKrause))
+- add Italian translation (courtesy of [Dragone2](https://github.com/Dragone2))
+- add Korean translation (courtesy of [chaeya](https://github.com/chaeya))
+- optimize png files (courtesy of [NikoKrause](https://github.com/NikoKrause))
  
 Bugfixes:
- - correct a msgid in translation files
+- correct a msgid in translation files
 
 ### 0.5.1 - December 20, 2020
 Features:
@@ -57,7 +57,7 @@ Bugfixes:
 
 ### 0.4.0 - July 17, 2020 
 Features:
-- allow multiple Desklet instances
+- allow multiple desklet instances
 - add German translation
 
 ### 0.3.0 - June 29, 2020
