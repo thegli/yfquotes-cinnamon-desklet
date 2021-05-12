@@ -174,7 +174,7 @@ msgid "Quote details"
 msgstr "Dettaglio quotazioni"
 
 #. settings-schema.json->showChangeIcon->description
-msgid "Show change/trend icon"
+msgid "Show change icon"
 msgstr "Mostra icona cambiamento"
 
 #. settings-schema.json->showChangeIcon->tooltip

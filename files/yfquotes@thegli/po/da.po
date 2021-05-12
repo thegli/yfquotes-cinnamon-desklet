@@ -172,7 +172,7 @@ msgid "Quote details"
 msgstr "Detaljer om kurserne"
 
 #. settings-schema.json->showChangeIcon->description
-msgid "Show change/trend icon"
+msgid "Show change icon"
 msgstr "Vis ikon for ændring"
 
 #. settings-schema.json->showChangeIcon->tooltip

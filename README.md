@@ -13,12 +13,16 @@ Tested with
 - Manjaro with Cinnamon 3.8
 
 ## Installation
-Either follow the installation instructions on [Cinnamon spices](https://cinnamon-spices.linuxmint.com/desklets), or manually download the folder **yfquotes@thegli** (below "files") and copy the folder and its content to *~/.local/share/cinnamon/desklets/*.
+Either follow the installation instructions on [Cinnamon spices](https://cinnamon-spices.linuxmint.com/desklets), or manually download the folder **yfquotes@thegli** (below "files") and copy the folder and its content to `~/.local/share/cinnamon/desklets/`
 
 ## Configuration
 Check out the desklet configuration settings, and choose the data refresh period, the list of quotes to show (see also [Known Limitations](#known-limitations)), and quote details to display. The default list contains the Dow 30 companies.
 
 ## Release Notes
+
+### 0.5.3 - May 12, 2021
+Features:
+- add Hungarian translation (courtesy of [KAMI911](https://github.com/KAMI911))
 
 ### 0.5.2 - February 7, 2021
 Features:
