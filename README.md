@@ -20,7 +20,7 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
-### 0.6.0 - May 13, 2021
+### 0.6.0 - June 18, 2021
 Features:
 - change layout of settings dialog to tabbed views
 - new setting to use alternative colors (currently show blue instead of green)
