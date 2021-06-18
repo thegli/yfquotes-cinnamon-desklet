@@ -54,7 +54,7 @@ msgstr "Layout"
 #. settings-schema.json->dataPage->title
 #. settings-schema.json->dataSymbolsSection->title
 msgid "Quotes"
-msgstr "Kurser"
+msgstr "kurser"
 
 #. settings-schema.json->detailsPage->title
 msgid "Details"

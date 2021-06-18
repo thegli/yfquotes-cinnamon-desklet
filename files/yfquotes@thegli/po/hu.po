@@ -59,7 +59,7 @@ msgstr "Szimbólumok"
 
 #. settings-schema.json->detailsPage->title
 msgid "Details"
-msgstr "részletei"
+msgstr "Részletei"
 
 #. settings-schema.json->presentationPage->title
 msgid "Presentation"
