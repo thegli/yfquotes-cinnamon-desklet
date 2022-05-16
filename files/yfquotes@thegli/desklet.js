@@ -16,6 +16,7 @@ const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 // Gtk library (policies for scrollview)
 const Gtk = imports.gi.Gtk;
+const Soup = imports.gi.Soup;
 // for periodic data reload
 const Mainloop = imports.mainloop;
 // Binding desklet to mainloop function
@@ -31,6 +32,9 @@ const ABSENT = "N/A";
 const YF_PAGE = "https://finance.yahoo.com/quote/";
 
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
+
+const _httpSession = new Soup.SessionAsync();
+Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
 
 function _(str) {
     return Gettext.dgettext(UUID, str);
@@ -53,7 +57,7 @@ YahooFinanceQuoteUtils.prototype = {
         }
         return ABSENT;
     }
-}
+};
 
 let YahooFinanceQuoteReader = function () {
 };
@@ -61,44 +65,32 @@ let YahooFinanceQuoteReader = function () {
 YahooFinanceQuoteReader.prototype = {
     constructor : YahooFinanceQuoteReader,
     yahooQueryBaseUrl : "https://query1.finance.yahoo.com/v7/finance/quote?symbols=",
-
-    getQuotes : function (quoteSymbols) {
-        const response = this.getYahooQueryResponse(this.createYahooQueryUrl(quoteSymbols));
-        return this.fetchQuotes(response);
-    },
-
-    createYahooQueryUrl : function (quoteSymbols) {
-        return this.yahooQueryBaseUrl + quoteSymbols.join(",");
-    },
-
-    getYahooQueryResponse : function (requestUrl) {
+    
+    getAsyncResponse : function(quoteSymbols, callback) {
+        const requestUrl = this.createYahooQueryUrl(quoteSymbols);
         const errorBegin="{\"quoteResponse\":{\"result\":[],\"error\":\"";
         const errorEnd = "\"}}";
-        const urlcatch = Gio.file_new_for_uri(requestUrl);
-        let response;
-
-        const maxRetries = 5;
-        let retries = 0;
-        do {
-            try {
-                let [successful, contents, etag_out] = urlcatch.load_contents(null);
-                if (successful) {
-                    response = contents.toString();
-                    retries = maxRetries;
-                } else {
-                    response = errorBegin + _("Yahoo Finance service not available!") + errorEnd;
+        
+        let here = this;
+        let message = Soup.Message.new("GET", requestUrl);
+        _httpSession.timeout = 10;
+        _httpSession.idle_timeout = 10;
+        _httpSession.queue_message(message, function (session, message) {
+            if( message.status_code === 200) {
+                try {
+                    callback.call(here, message.response_body.data.toString());
+                } catch(e) {
+                    global.logError(e);
                 }
-            } catch (err) {
-                response = errorBegin + err + errorEnd;
+            } else {
+                global.logWarning("Error retrieving url " + requestUrl + ". Status: " + message.status_code + ": " + message.reason_phrase);
+                callback.call(here, errorBegin + _("Yahoo Finance service not available!") + errorEnd);
             }
-            retries++;
-        } while (retries < maxRetries);
-
-        return JSON.parse(response);
+        });
     },
-
-    fetchQuotes : function (response) {
-        return [response.quoteResponse.result, response.quoteResponse.error];
+    
+    createYahooQueryUrl : function (quoteSymbols) {
+        return this.yahooQueryBaseUrl + quoteSymbols.join(",");
     }
 };
 
@@ -452,13 +444,16 @@ StockQuoteDesklet.prototype = {
         this.unrender();
         this.removeUpdateTimer();
     },
-
+    
     onUpdate : function () {
         const quoteSymbols = this.quoteSymbolsText.split("\n");
         try {
-            let quotes = this.quoteReader.getQuotes(quoteSymbols);
-            this.render(quotes);
-            this.setUpdateTimer();
+            const _that = this;
+            this.quoteReader.getAsyncResponse(quoteSymbols, function(response) {
+                let parsedResponse = JSON.parse(response);
+                _that.render([parsedResponse.quoteResponse.result, parsedResponse.quoteResponse.error]);
+                _that.setUpdateTimer();
+            });
         } catch (err) {
             this.onError(quoteSymbols, err);
         }
