@@ -55,7 +55,7 @@ YahooFinanceQuoteUtils.prototype = {
     }
 }
 
-var YahooFinanceQuoteReader = function () {
+let YahooFinanceQuoteReader = function () {
 };
 
 YahooFinanceQuoteReader.prototype = {
@@ -102,7 +102,7 @@ YahooFinanceQuoteReader.prototype = {
     }
 };
 
-var QuotesTable = function () {
+let QuotesTable = function () {
     this.el = new St.Table({
         homogeneous : false
     });
@@ -205,7 +205,7 @@ QuotesTable.prototype = {
     },
 
     createAbsoluteChangeLabel : function (quote, withCurrencySymbol, decimalPlaces, strictRounding) {
-        var absoluteChangeText = "";
+        let absoluteChangeText = "";
         if (this.quoteUtils.existsProperty(quote, "regularMarketChange")) {
             let absoluteChange = this.roundAmount(quote.regularMarketChange, decimalPlaces, strictRounding);
             if (absoluteChange > 0.0) {
@@ -244,13 +244,15 @@ QuotesTable.prototype = {
     },
 
     createPercentChangeLabel : function (quote, useTrendColors, uptrendChangeColor, downtrendChangeColor, unchangedTrendColor, strictRounding) {
-        let labelColor = unchangedTrendColor;
+        let labelColor = "";
         if (useTrendColors && this.quoteUtils.existsProperty(quote, "regularMarketChangePercent")) {
             const percentageChange = parseFloat(quote.regularMarketChangePercent);
             if (percentageChange > 0) {
                 labelColor = uptrendChangeColor;
             } else if (percentageChange < 0) {
                 labelColor = downtrendChangeColor;
+            } else {
+                labelColor = unchangedTrendColor;
             }
         }
 
@@ -259,7 +261,7 @@ QuotesTable.prototype = {
                 ? (this.roundAmount(quote.regularMarketChangePercent, 2, strictRounding) + "%")
                 : ABSENT,
             style_class : "quotes-number",
-            style : "color: " + labelColor + ";"
+            style : labelColor ? "color: " + labelColor + ";" : ""
         });
     },
 
