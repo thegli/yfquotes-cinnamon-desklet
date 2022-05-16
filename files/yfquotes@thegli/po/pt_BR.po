@@ -325,7 +325,7 @@ msgstr "Usar cores para indicar a mudança percentual da ação"
 
 #. settings-schema.json->colorPercentChange->tooltip
 msgid ""
-"Color the percent change to show the trend (green for up, red for down)."
+"Color the percent change to show the trend."
 msgstr ""
 "Colore a variação percentual para indicar se o preço da ação subiu (verde), "
 "desceu (vermelho) ou não mudou (branco)."

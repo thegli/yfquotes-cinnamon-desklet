@@ -334,7 +334,7 @@ msgstr "Trendszínek használata a százalékos változásnál"
 
 #. settings-schema.json->colorPercentChange->tooltip
 msgid ""
-"Color the percent change to show the trend (green for up, red for down)."
+"Color the percent change to show the trend."
 msgstr ""
 "Százalékos változás színezése a trend megjelenítéséhez (zöld: emelkedő, "
 "piros: csökkenő)."

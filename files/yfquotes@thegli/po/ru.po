@@ -318,7 +318,7 @@ msgid "Use trend colors for percent change"
 msgstr "Показывать цветные проценты"
 
 #. settings-schema.json->colorPercentChange->tooltip
-msgid "Color the percent change to show the trend (green for up, red for down)."
+msgid "Color the percent change to show the trend."
 msgstr "Отображение цветных процентов (зеленый цвет при росте, красный цвет при падении)."
 
 #. settings-schema.json->showTradeTime->description

@@ -246,7 +246,7 @@
     "type": "checkbox",
     "default": true,
     "description": "Use trend colors for percent change",
-    "tooltip": "Color the percent change to show the trend (green for up, red for down).",
+    "tooltip": "Color the percent change to show the trend.",
     "dependency": "showPercentChange"
   },
   "showTradeTime": {

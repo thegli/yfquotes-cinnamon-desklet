@@ -324,7 +324,7 @@ msgstr "Usa i colori di tendenza per la variazione percentuale"
 
 #. settings-schema.json->colorPercentChange->tooltip
 msgid ""
-"Color the percent change to show the trend (green for up, red for down)."
+"Color the percent change to show the trend."
 msgstr ""
 "Colora la variazione percentuale per mostrare la tendenza (verde in alto, "
 "rosso in basso)."

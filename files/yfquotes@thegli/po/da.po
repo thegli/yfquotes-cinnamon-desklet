@@ -319,7 +319,7 @@ msgstr "Brug tendensfarver for procentvis ændring"
 
 #. settings-schema.json->colorPercentChange->tooltip
 msgid ""
-"Color the percent change to show the trend (green for up, red for down)."
+"Color the percent change to show the trend."
 msgstr "Viser den procentvise ændring som grøn (op) eller rød (ned)."
 
 #. settings-schema.json->showTradeTime->description
