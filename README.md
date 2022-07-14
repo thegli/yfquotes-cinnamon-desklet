@@ -48,11 +48,11 @@ Bugfixes:
 
 Features:
 
-- add Russian translation
+- add Russian translation (courtesy of [sulonetskyy](https://github.com/sulonetskyy))
 
 ### 0.7.0 - January 10, 2022
 
-Features:
+Features (courtesy of [sulonetskyy](https://github.com/sulonetskyy)):
 
 - add symbolic trend change icons instead of .svg
 - add configurable trend change colors instead of hardcoded colors
