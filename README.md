@@ -24,6 +24,12 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
+### 0.8.3 - September 15, 2022
+
+Bugfixes:
+
+- add support for libsoup3 (courtesy of [fredcw](https://github.com/fredcw))
+
 ### 0.8.2 - June 8, 2022
 
 Bugfixes:
