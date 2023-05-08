@@ -24,6 +24,14 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
+### 0.8.4 - May 8, 2023
+
+Features:
+
+- update Danish translation (courtesy of [Alan01](https://github.com/Alan01))
+- update Hungarian translation (courtesy of [KAMI911](https://github.com/KAMI911))
+- update Italian translation (courtesy of [Dragone2](https://github.com/Dragone2))
+
 ### 0.8.3 - September 15, 2022
 
 Bugfixes:
