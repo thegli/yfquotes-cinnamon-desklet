@@ -28,6 +28,7 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 Features:
 
+- new setting to select the version of Yahoo Finance Quotes API
 - update Danish translation (courtesy of [Alan01](https://github.com/Alan01))
 - update Hungarian translation (courtesy of [KAMI911](https://github.com/KAMI911))
 - update Italian translation (courtesy of [Dragone2](https://github.com/Dragone2))
