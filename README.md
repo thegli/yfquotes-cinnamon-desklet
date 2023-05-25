@@ -24,6 +24,12 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Release Notes
 
+### 0.8.5 - May 25, 2023
+
+Bugfixes:
+
+- adapt to recent changes in Yahoo Finance Quotes API
+
 ### 0.8.4 - May 8, 2023
 
 Features:
