@@ -16,23 +16,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
-#: desklet.js:92 desklet.js:106
+#: desklet.js:192 desklet.js:213
 msgid "Yahoo Finance service not available!"
 msgstr "Yahoo Finance Service nicht verfügbar!"
 
-#: desklet.js:438
+#: desklet.js:557
 msgid "Updated at "
 msgstr "Aktualisiert um "
 
-#: desklet.js:445
+#: desklet.js:564
 msgid "Error: "
 msgstr "Fehler: "
 
-#: desklet.js:490
+#: desklet.js:634
 msgid "Cannot display quotes information for symbols: "
 msgstr "Finanzdaten können nicht angezeigt werden für die Symbole: "
 
-#: desklet.js:491
+#: desklet.js:635
 msgid "The following error occurred: "
 msgstr "Folgender Fehler ist aufgetreten: "
 
@@ -174,6 +174,26 @@ msgstr "Zeitpunkt der letzten Aktualisierung anzeigen"
 msgid "Display timestamp when quotes were updated last."
 msgstr "Zeigt den Zeitstempel der letzten Aktualisierung der Finanzdaten an."
 
+#. settings-schema.json->sendCustomUserAgent->description
+msgid "Send custom User-Agent header"
+msgstr "Sende individuellen User-Agent Header"
+
+#. settings-schema.json->sendCustomUserAgent->tooltip
+msgid ""
+"Include a custom User-Agent header in Yahoo Finance Quotes API requests. By "
+"default, this header is not set."
+msgstr ""
+"Fügt einen eigenen User-Agent Header den Yahoo Finance Quotes API Aufrufen "
+"hinzu. Dieser Header wird normalerweise nicht gesetzt."
+
+#. settings-schema.json->customUserAgent->description
+msgid "Custom User-Agent header"
+msgstr "Individueller User-Agent Header"
+
+#. settings-schema.json->customUserAgent->tooltip
+msgid "Value for User-Agent header to send with all API requests."
+msgstr "User-Agent Header Wert, der mit allen API Aufrufen gesendet wird."
+
 #. settings-schema.json->roundNumbers->description
 msgid "Round numbers"
 msgstr "Beträge runden"
@@ -199,8 +219,12 @@ msgid "Strict rounding"
 msgstr "Runden auf feste Anzahl Dezimalstellen"
 
 #. settings-schema.json->strictRounding->tooltip
-msgid "Strict rounding to the specified decimal places (eg. 0 will be presented as 0.00)."
-msgstr "Rundet Beträge immer auf die gewählte Anzahl Stellen (z.B. wird der Wert 0 bei 2 Stellen als 0.00 dargestellt)."
+msgid ""
+"Strict rounding to the specified decimal places (eg. 0 will be presented as "
+"0.00)."
+msgstr ""
+"Rundet Beträge immer auf die gewählte Anzahl Stellen (z.B. wird der Wert "
+"0 bei 2 Stellen als 0.00 dargestellt)."
 
 #. settings-schema.json->quoteSymbols->description
 msgid "Quote symbols"
@@ -339,10 +363,8 @@ msgid "Use trend colors for percent change"
 msgstr "Verwende Trend-Farben bei prozentualer Veränderung"
 
 #. settings-schema.json->colorPercentChange->tooltip
-msgid ""
-"Color the percent change to show the trend."
-msgstr ""
-"Färbt die prozentuale Veränderung gemäss Trend."
+msgid "Color the percent change to show the trend."
+msgstr "Färbt die prozentuale Veränderung gemäss Trend."
 
 #. settings-schema.json->showTradeTime->description
 msgid "Show trading time"
