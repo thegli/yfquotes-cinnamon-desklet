@@ -168,12 +168,12 @@ YahooFinanceQuoteReader.prototype = {
         }
     },
     
-    getFinanceData : function (quoteSymbols, apiVersion, customUserAgent, callback) {
-        const requestUrl = this.createYahooQueryUrl(apiVersion, quoteSymbols);
+    getFinanceData : function (quoteSymbols, customUserAgent, callback) {
+        const requestUrl = this.createYahooQueryUrl(quoteSymbols);
         let here = this;
         let message = Soup.Message.new("GET", requestUrl);
         if (IS_SOUP_2) {
-            if (apiVersion !== "6" && _cookieStore != null) {
+            if (_cookieStore != null) {
                 Soup.cookies_to_request(_cookieStore, message);
             }
             if (customUserAgent != null) {
@@ -193,7 +193,7 @@ YahooFinanceQuoteReader.prototype = {
                 }
             });
         } else {
-            if (apiVersion !== "6" && _cookieStore != null) {
+            if (_cookieStore != null) {
                 Soup.cookies_to_request(_cookieStore, message);
             }
             if (customUserAgent != null) {
@@ -216,12 +216,8 @@ YahooFinanceQuoteReader.prototype = {
         }
     },
     
-    createYahooQueryUrl : function (apiVersion, quoteSymbols) {
-        if (apiVersion === "6") {
-            return "https://query1.finance.yahoo.com/v6/finance/quote?symbols=" + quoteSymbols.join(",");
-        } else {
-            return "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + quoteSymbols.join(",") + "&crumb=" + _crumb;   
-        }
+    createYahooQueryUrl : function (quoteSymbols) {
+        return "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + quoteSymbols.join(",") + "&crumb=" + _crumb;
     },
     
     buildErrorResponse : function (errorMsg) {
@@ -465,8 +461,6 @@ StockQuoteDesklet.prototype = {
             this.onDisplayChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "transparency", "transparency",
             this.onDisplayChanged, null);
-        this.settings.bindProperty(Settings.BindingDirection.IN, "apiVersion", "apiVersion",
-            this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "delayMinutes", "delayMinutes",
             this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showLastUpdateTimestamp", "showLastUpdateTimestamp",
@@ -588,13 +582,12 @@ StockQuoteDesklet.prototype = {
     
     onUpdate : function () {
         const quoteSymbols = this.quoteSymbolsText.split("\n");
-        const yfApiVersion = this.apiVersion ? this.apiVersion : "7";
         const customUserAgent = this.sendCustomUserAgent ? this.customUserAgent : null;
         
         try {
             const _that = this;
             
-            if (yfApiVersion !== "6" && (_cookieStore == null || _crumb == null)) {
+            if (_cookieStore == null || _crumb == null) {
                 this.quoteReader.getCookie(customUserAgent, function(responseMessage) {
                     _cookieStore = Soup.cookies_from_response(responseMessage);
                     
@@ -606,20 +599,20 @@ StockQuoteDesklet.prototype = {
                                 _crumb = responseBody;
                             }
                          }
-                        _that.renderFinanceData(quoteSymbols, yfApiVersion, customUserAgent);
+                        _that.renderFinanceData(quoteSymbols, customUserAgent);
                     });
                 });
             } else {
-                _that.renderFinanceData(quoteSymbols, yfApiVersion);
+                _that.renderFinanceData(quoteSymbols);
             }
         } catch (err) {
             this.onError(quoteSymbols, err);
         }
     },
     
-    renderFinanceData : function (quoteSymbols, yfApiVersion, customUserAgent) {
+    renderFinanceData : function (quoteSymbols, customUserAgent) {
         const _that = this;
-        this.quoteReader.getFinanceData(quoteSymbols, yfApiVersion, customUserAgent, function(response) {
+        this.quoteReader.getFinanceData(quoteSymbols, customUserAgent, function(response) {
             let parsedResponse = JSON.parse(response);
             _that.render([parsedResponse.quoteResponse.result, parsedResponse.quoteResponse.error]);
             _that.setUpdateTimer();
