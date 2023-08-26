@@ -56,7 +56,9 @@ if (IS_SOUP_2) {
 _httpSession.timeout = 10;
 _httpSession.idle_timeout = 10;
 
-let _cookieStore = null;
+let _cookieJar = new Soup.CookieJar();
+Soup.Session.prototype.add_feature.call(_httpSession, _cookieJar);
+
 let _crumb = null;
 
 function _(str) {
@@ -125,9 +127,6 @@ YahooFinanceQuoteReader.prototype = {
         if (IS_SOUP_2) {
             message.request_headers.append(ACCEPT_HEADER, ACCEPT_VALUE_CRUMB);
             message.request_headers.append(ACCEPT_ENCODING_HEADER, ACCEPT_ENCODING_VALUE);
-            if (_cookieStore != null) {
-                Soup.cookies_to_request(_cookieStore, message);
-            }
             if (customUserAgent != null) {
                 message.request_headers.append(USER_AGENT_HEADER, customUserAgent);
             }
@@ -139,16 +138,13 @@ YahooFinanceQuoteReader.prototype = {
                         global.logError(e);
                     }
                 } else {
-                    global.logWarning("Error retrieving crumb! Status: " + message.status_code + ": " + message.reason_phrase);
+                    global.logWarning("Error retrieving crumb! Status: " + message.status_code + " " + message.reason_phrase);
                     callback.call(here, null);
                 }
             });
         } else {
             message.get_request_headers().append(ACCEPT_HEADER, ACCEPT_VALUE_CRUMB);
             message.get_request_headers().append(ACCEPT_ENCODING_HEADER, ACCEPT_ENCODING_VALUE);
-            if (_cookieStore != null) {
-                Soup.cookies_to_request(_cookieStore, message);
-            }
             if (customUserAgent != null) {
                 message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
             }
@@ -161,7 +157,7 @@ YahooFinanceQuoteReader.prototype = {
                         global.logError(e);
                     }
                 } else {
-                    global.logWarning("Error retrieving crumb! Status: " + message.get_status() + ": " + message.get_reason_phrase());
+                    global.logWarning("Error retrieving crumb! Status: " + message.get_status() + " " + message.get_reason_phrase());
                     callback.call(here, null);
                 }
             });
@@ -173,9 +169,6 @@ YahooFinanceQuoteReader.prototype = {
         let here = this;
         let message = Soup.Message.new("GET", requestUrl);
         if (IS_SOUP_2) {
-            if (_cookieStore != null) {
-                Soup.cookies_to_request(_cookieStore, message);
-            }
             if (customUserAgent != null) {
                 message.request_headers.append(USER_AGENT_HEADER, customUserAgent);
             }
@@ -193,9 +186,6 @@ YahooFinanceQuoteReader.prototype = {
                 }
             });
         } else {
-            if (_cookieStore != null) {
-                Soup.cookies_to_request(_cookieStore, message);
-            }
             if (customUserAgent != null) {
                 message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
             }
@@ -587,23 +577,38 @@ StockQuoteDesklet.prototype = {
         try {
             const _that = this;
             
-            if (_cookieStore == null || _crumb == null) {
-                this.quoteReader.getCookie(customUserAgent, function(responseMessage) {
-                    _cookieStore = Soup.cookies_from_response(responseMessage);
+            if (_crumb) {
+                _that.renderFinanceData(quoteSymbols);
+            } else {
+                this.quoteReader.getCookie(customUserAgent, function(authResponseMessage) {
+                    let hasAuthCookie = false;
+                    for (let cookie of _cookieJar.all_cookies()) {
+                        let cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
+                        if (cookieName === "A1") {
+                            hasAuthCookie = true;
+                            break;
+                        }
+                    }
                     
                     _that.quoteReader.getCrumb(customUserAgent, function(responseBody) {
                         if (responseBody) {
-                            if (typeof responseBody["data"] !== "undefined") {
+                            if (typeof responseBody.data === "string"  && responseBody.data.trim() !== "") {
                                 _crumb = responseBody.data;
-                            } else {
+                            } else if (typeof responseBody === "string" && responseBody.trim() !== "") {
                                 _crumb = responseBody;
                             }
-                         }
-                        _that.renderFinanceData(quoteSymbols, customUserAgent);
+                        }
+                        
+                        if (_crumb) {
+                            _that.renderFinanceData(quoteSymbols, customUserAgent);
+                        } else {
+                            global.logError("Failed to retrieve a crumb! Data fetching not possible.");
+                            const errorResponse = JSON.parse(_that.quoteReader.buildErrorResponse("Failed to retrieve authorization parameter. Unable to fetch quotes data."));
+                            _that.render([errorResponse.quoteResponse.result, errorResponse.quoteResponse.error]);
+                            _that.setUpdateTimer();
+                        }
                     });
                 });
-            } else {
-                _that.renderFinanceData(quoteSymbols);
             }
         } catch (err) {
             this.onError(quoteSymbols, err);
