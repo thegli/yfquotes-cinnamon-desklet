@@ -188,8 +188,8 @@ YahooFinanceQuoteReader.prototype = {
                         global.logError(e);
                     }
                 } else {
-                    global.logWarning("Error retrieving url " + requestUrl + ". Status: " + message.status_code + ": " + message.reason_phrase);
-                    callback.call(here, here.buildErrorResponse(_("Yahoo Finance service not available!")));
+                    global.logWarning("Error retrieving url " + requestUrl + ". Status: " + message.status_code + " " + message.reason_phrase);
+                    callback.call(here, here.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + message.status_code + " " + message.reason_phrase));
                 }
             });
         } else {
@@ -209,8 +209,8 @@ YahooFinanceQuoteReader.prototype = {
                         global.logError(e);
                     }
                 } else {
-                    global.logWarning("Error retrieving url " + requestUrl + ". Status: " + message.get_status() + ": " + message.get_reason_phrase());
-                    callback.call(here, here.buildErrorResponse(_("Yahoo Finance service not available!")));
+                    global.logWarning("Error retrieving url " + requestUrl + ". Status: " + message.get_status() + " " + message.get_reason_phrase());
+                    callback.call(here, here.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + message.get_status()  + " " + message.get_reason_phrase()));
                 }
             });
         }
