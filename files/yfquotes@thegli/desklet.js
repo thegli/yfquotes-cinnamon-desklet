@@ -29,20 +29,28 @@ const Gettext = imports.gettext;
 
 const UUID = "yfquotes@thegli";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
+const IS_SOUP_2 = Soup.MAJOR_VERSION == 2;
 
-const ABSENT = "N/A";
 const YF_COOKIE_URL = "https://finance.yahoo.com/quote/%5EGSPC/options";
+const YF_CONSENT_URL = "https://consent.yahoo.com/v2/collectConsent";
 const YF_CRUMB_URL = "https://query2.finance.yahoo.com/v1/test/getcrumb";
-const YF_QUOTE_PAGE = "https://finance.yahoo.com/quote/";
-const ERROR_RESPONSE_BEGIN="{\"quoteResponse\":{\"result\":[],\"error\":\"";
-const ERROR_RESPONSE_END = "\"}}";
+const YF_QUOTE_PAGE_URL = "https://finance.yahoo.com/quote/";
+
 const ACCEPT_HEADER = "Accept";
 const ACCEPT_VALUE_COOKIE = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
 const ACCEPT_VALUE_CRUMB = "*/*";
 const ACCEPT_ENCODING_HEADER = "Accept-Encoding";
 const ACCEPT_ENCODING_VALUE = "gzip, deflate";
 const USER_AGENT_HEADER = "User-Agent";
-const IS_SOUP_2 = Soup.MAJOR_VERSION == 2;
+const FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
+
+const AUTH_COOKIE = "A1";
+const CONSENT_COOKIE = "GUCS";
+
+const ABSENT = "N/A";
+const ERROR_RESPONSE_BEGIN="{\"quoteResponse\":{\"result\":[],\"error\":\"";
+const ERROR_RESPONSE_END = "\"}}";
+const LOG_PREFIX = UUID + " - ";
 
 Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
 
@@ -58,6 +66,7 @@ _httpSession.idle_timeout = 10;
 
 let _cookieJar = new Soup.CookieJar();
 Soup.Session.prototype.add_feature.call(_httpSession, _cookieJar);
+Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ContentDecoder());
 
 let _crumb = null;
 
@@ -81,6 +90,17 @@ YahooFinanceQuoteUtils.prototype = {
             return quote.shortName;
         }
         return ABSENT;
+    },
+    
+    getMessageStatusInfo : function (soupMessage) {
+        if (soupMessage) {
+            if (IS_SOUP_2) {
+                return soupMessage.status_code + " " + soupMessage.reason_phrase;    
+            } else {
+                return soupMessage.get_status() + " " + soupMessage.get_reason_phrase();
+            }
+        }
+        return "no status available";
     }
 };
 
@@ -100,9 +120,9 @@ YahooFinanceQuoteReader.prototype = {
             }
             _httpSession.queue_message(message, function (session, message) {
                 try {
-                    callback.call(here, message);
+                    callback.call(here, message, message.response_body.data);
                 } catch(e) {
-                    global.logError(e);
+                    global.logError(LOG_PREFIX + e);
                 }
             });
         } else {
@@ -112,10 +132,53 @@ YahooFinanceQuoteReader.prototype = {
                 message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
             }
             _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function (session, result) {
+                if( message.get_status() === Soup.Status.OK) {
+                    try {
+                        const bytes = _httpSession.send_and_read_finish(result);
+                        callback.call(here, message, ByteArray.toString(bytes.get_data()));
+                    } catch(e) {
+                        global.logError(LOG_PREFIX + e);
+                    }
+                } else {
+                    global.logWarning(LOG_PREFIX + "Error retrieving auth page! Status: " + message.get_status() + " " + message.get_reason_phrase());
+                    callback.call(here, null);
+                }
+            });
+        }
+    },
+    
+    postConsent : function (customUserAgent, formData, callback) {
+        let here = this;
+        let message = Soup.Message.new("POST", YF_CONSENT_URL);
+        
+        if (IS_SOUP_2) {
+            message.request_headers.append(ACCEPT_HEADER, ACCEPT_VALUE_COOKIE);
+            message.request_headers.append(ACCEPT_ENCODING_HEADER, ACCEPT_ENCODING_VALUE);
+             if (customUserAgent != null) {
+                message.request_headers.append(USER_AGENT_HEADER, customUserAgent);
+            }
+            message.set_request(FORM_URLENCODED_VALUE, Soup.MemoryUse.COPY, formData);
+    
+            _httpSession.queue_message(message, function (session, message) {
                 try {
                     callback.call(here, message);
                 } catch(e) {
-                    global.logError(e);
+                    global.logError(LOG_PREFIX + e);
+                }
+            });
+        } else {
+            message.get_request_headers().append(ACCEPT_HEADER, ACCEPT_VALUE_CRUMB);
+            message.get_request_headers().append(ACCEPT_ENCODING_HEADER, ACCEPT_ENCODING_VALUE);
+            if (customUserAgent != null) {
+                message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
+            }
+            message.set_request_body_from_bytes(FORM_URLENCODED_VALUE, GLib.Bytes.new(formData));
+            
+            _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function (session, result) {
+                try {
+                    callback.call(here, message);
+                } catch(e) {
+                    global.logError(LOG_PREFIX + e);
                 }
             });
         }
@@ -133,13 +196,13 @@ YahooFinanceQuoteReader.prototype = {
             _httpSession.queue_message(message, function (session, message) {
                 if (message.status_code === Soup.KnownStatusCode.OK) {
                     try {
-                        callback.call(here, message.response_body);
+                        callback.call(here, message, message.response_body);
                     } catch(e) {
-                        global.logError(e);
+                        global.logError(LOG_PREFIX + e);
                     }
                 } else {
-                    global.logWarning("Error retrieving crumb! Status: " + message.status_code + " " + message.reason_phrase);
-                    callback.call(here, null);
+                    global.logWarning(LOG_PREFIX + "Error retrieving crumb! Status: " + message.status_code + " " + message.reason_phrase);
+                    callback.call(here, message, null);
                 }
             });
         } else {
@@ -149,16 +212,16 @@ YahooFinanceQuoteReader.prototype = {
                 message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
             }
             _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function (session, result) {
-                if( message.get_status() === Soup.Status.OK) {
+                if (message.get_status() === Soup.Status.OK) {
                     try {
                         const bytes = _httpSession.send_and_read_finish(result);
-                        callback.call(here, ByteArray.toString(bytes.get_data()));
+                        callback.call(here, message, ByteArray.toString(bytes.get_data()));
                     } catch(e) {
-                        global.logError(e);
+                        global.logError(LOG_PREFIX + e);
                     }
                 } else {
-                    global.logWarning("Error retrieving crumb! Status: " + message.get_status() + " " + message.get_reason_phrase());
-                    callback.call(here, null);
+                    global.logWarning(LOG_PREFIX + "Error retrieving crumb! Status: " + message.get_status() + " " + message.get_reason_phrase());
+                    callback.call(here, message, null);
                 }
             });
         }
@@ -174,14 +237,14 @@ YahooFinanceQuoteReader.prototype = {
             }
             
             _httpSession.queue_message(message, function (session, message) {
-                if( message.status_code === Soup.KnownStatusCode.OK) {
+                if (message.status_code === Soup.KnownStatusCode.OK) {
                     try {
                         callback.call(here, message.response_body.data.toString());
                     } catch(e) {
-                        global.logError(e);
+                        global.logError(LOG_PREFIX + e);
                     }
                 } else {
-                    global.logWarning("Error retrieving url " + requestUrl + ". Status: " + message.status_code + " " + message.reason_phrase);
+                    global.logWarning(LOG_PREFIX + "Error retrieving url " + requestUrl + ". Status: " + message.status_code + " " + message.reason_phrase);
                     callback.call(here, here.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + message.status_code + " " + message.reason_phrase));
                 }
             });
@@ -191,15 +254,15 @@ YahooFinanceQuoteReader.prototype = {
             }
             
             _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function (session, result) {
-                if( message.get_status() === Soup.Status.OK) {
+                if (message.get_status() === Soup.Status.OK) {
                     try {
                         const bytes = _httpSession.send_and_read_finish(result);
                         callback.call(here, ByteArray.toString(bytes.get_data()));
                     } catch(e) {
-                        global.logError(e);
+                        global.logError(LOG_PREFIX + e);
                     }
                 } else {
-                    global.logWarning("Error retrieving url " + requestUrl + ". Status: " + message.get_status() + " " + message.get_reason_phrase());
+                    global.logWarning(LOG_PREFIX + "Error retrieving url " + requestUrl + ". Status: " + message.get_status() + " " + message.get_reason_phrase());
                     callback.call(here, here.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + message.get_status()  + " " + message.get_reason_phrase()));
                 }
             });
@@ -296,7 +359,7 @@ QuotesTable.prototype = {
             const symbolButton = new St.Button();
             symbolButton.add_actor(label);
             symbolButton.connect("clicked", Lang.bind(this, function() {
-                Gio.app_info_launch_default_for_uri(YF_QUOTE_PAGE + quoteSymbol, global.create_app_launch_context());
+                Gio.app_info_launch_default_for_uri(YF_QUOTE_PAGE_URL + quoteSymbol, global.create_app_launch_context());
             }));
             return symbolButton;
         } else {
@@ -575,44 +638,89 @@ StockQuoteDesklet.prototype = {
         const customUserAgent = this.sendCustomUserAgent ? this.customUserAgent : null;
         
         try {
-            const _that = this;
-            
             if (_crumb) {
-                _that.renderFinanceData(quoteSymbols);
+                this.renderFinanceData(quoteSymbols, customUserAgent);
             } else {
-                this.quoteReader.getCookie(customUserAgent, function(authResponseMessage) {
-                    let hasAuthCookie = false;
-                    for (let cookie of _cookieJar.all_cookies()) {
-                        let cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
-                        if (cookieName === "A1") {
-                            hasAuthCookie = true;
-                            break;
-                        }
-                    }
-                    
-                    _that.quoteReader.getCrumb(customUserAgent, function(responseBody) {
-                        if (responseBody) {
-                            if (typeof responseBody.data === "string"  && responseBody.data.trim() !== "") {
-                                _crumb = responseBody.data;
-                            } else if (typeof responseBody === "string" && responseBody.trim() !== "") {
-                                _crumb = responseBody;
-                            }
-                        }
-                        
-                        if (_crumb) {
-                            _that.renderFinanceData(quoteSymbols, customUserAgent);
-                        } else {
-                            global.logError("Failed to retrieve a crumb! Data fetching not possible.");
-                            const errorResponse = JSON.parse(_that.quoteReader.buildErrorResponse("Failed to retrieve authorization parameter. Unable to fetch quotes data."));
-                            _that.render([errorResponse.quoteResponse.result, errorResponse.quoteResponse.error]);
-                            _that.setUpdateTimer();
-                        }
-                    });
-                });
+                this.fetchCookieAndRender(quoteSymbols, customUserAgent);
             }
         } catch (err) {
             this.onError(quoteSymbols, err);
         }
+    },
+    
+    existsCookie: function (name) {
+        for (let cookie of _cookieJar.all_cookies()) {
+            let cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
+            if (cookieName === name) {
+                return true;
+            }
+        }
+        
+        return false;
+    },
+    
+    fetchCookieAndRender : function (quoteSymbols, customUserAgent) {
+        const _that = this;
+        this.quoteReader.getCookie(customUserAgent, function(authResponseMessage, responseBody) {
+            if (_that.existsCookie(AUTH_COOKIE)) {
+                _that.fetchCrumbAndRender(quoteSymbols, customUserAgent);
+            } else if (_that.existsCookie(CONSENT_COOKIE)) {                
+                _that.processConsentAndRender(authResponseMessage, responseBody, quoteSymbols, customUserAgent);
+            } else {
+                global.logWarning(LOG_PREFIX + "Failed to retrieve auth cookie!");
+                _that.renderErrorMessage(_("Failed to retrieve authorization parameter! Unable to fetch quotes data.\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(authResponseMessage));
+            }
+        });
+    },
+    
+    processConsentAndRender : function (authResponseMessage, consentPage, quoteSymbols, customUserAgent) {
+        const _that = this;
+        const formElementRegex = /(<form method="post")(.*)(action="">)/;
+        const formInputRegex = /(<input type="hidden" name=")(.*?)(" value=")(.*?)(">)/g;
+        
+        let consentFormFields = "";
+        if (formElementRegex.test(consentPage)) {
+            let failsafe = 0;
+            let hiddenField;
+            while (failsafe < 20 && (hiddenField = formInputRegex.exec(consentPage)) !== null) {
+                consentFormFields += hiddenField[2] + "=" + hiddenField[4] + "&";
+                failsafe++;
+            }
+            consentFormFields += "reject=reject";
+            
+           this.quoteReader.postConsent(customUserAgent, consentFormFields, function(consentResponseMessage) {
+                if (_that.existsCookie(AUTH_COOKIE)) {
+                    _that.fetchCrumbAndRender(quoteSymbols, customUserAgent);
+                } else {
+                    global.logWarning(LOG_PREFIX + "Failed to retrieve auth cookie from consent form.");
+                    _that.renderErrorMessage(_("Consent processing failed! Unable to fetch quotes data.\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(consentResponseMessage));
+                }
+            });
+        } else {
+            global.logWarning(LOG_PREFIX + "Consent form not detected.");
+            this.renderErrorMessage(_("Consent processing not completed! Unable to fetch quotes data.\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(authResponseMessage));
+        }
+    },
+    
+    fetchCrumbAndRender : function (quoteSymbols, customUserAgent) {
+        const _that = this;
+        this.quoteReader.getCrumb(customUserAgent, function(crumbResponseMessage, responseBody) {
+            if (responseBody) {
+                if (typeof responseBody.data === "string"  && responseBody.data.trim() !== "") {
+                    _crumb = responseBody.data;
+                } else if (typeof responseBody === "string" && responseBody.trim() !== "") {
+                    _crumb = responseBody;
+                }
+            }
+            
+            if (_crumb) {
+                global.log(LOG_PREFIX + "Successfully retrieved all authorization parameters.");
+                _that.renderFinanceData(quoteSymbols, customUserAgent);
+            } else {
+                global.logWarning(LOG_PREFIX + "Failed to retrieve crumb!");
+                _that.renderErrorMessage(_("Failed to retrieve authorization crumb! Unable to fetch quotes data.\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(crumbResponseMessage));
+            }
+        });
     },
     
     renderFinanceData : function (quoteSymbols, customUserAgent) {
@@ -623,14 +731,20 @@ StockQuoteDesklet.prototype = {
             _that.setUpdateTimer();
         });
     },
+    
+    renderErrorMessage : function (errorMessage) {
+        const errorResponse = JSON.parse(this.quoteReader.buildErrorResponse(errorMessage));
+        this.render([errorResponse.quoteResponse.result, errorResponse.quoteResponse.error]);
+        this.setUpdateTimer();  
+    },
 
     setUpdateTimer : function () {
         this.updateLoop = Mainloop.timeout_add(this.delayMinutes * 60 * 1000, Lang.bind(this, this.onUpdate));
     },
 
     onError : function (quoteSymbols, err) {
-        global.logError(_("Cannot display quotes information for symbols: ") + quoteSymbols.join(","));
-        global.logError(_("The following error occurred: ") + err);
+        global.logError(LOG_PREFIX + _("Cannot display quotes information for symbols: ") + quoteSymbols.join(","));
+        global.logError(LOG_PREFIX + _("The following error occurred: ") + err);
     },
 
     sortByProperty: function (quotes, prop, direction) {
