@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-27 21:49+0200\n"
+"POT-Creation-Date: 2023-08-28 16:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,44 +16,44 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: desklet.js:248 desklet.js:266
+#: desklet.js:302 desklet.js:321
 msgid "Yahoo Finance service not available!\\nStatus: "
 msgstr ""
 
-#: desklet.js:604
+#: desklet.js:660
 msgid "Updated at "
 msgstr ""
 
-#: desklet.js:611
+#: desklet.js:667
 msgid "Error: "
 msgstr ""
 
-#: desklet.js:671
+#: desklet.js:728
 msgid ""
 "Failed to retrieve authorization parameter! Unable to fetch quotes "
 "data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:696
+#: desklet.js:753
 msgid "Consent processing failed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:701
+#: desklet.js:758
 msgid ""
 "Consent processing not completed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:721
+#: desklet.js:779
 msgid ""
 "Failed to retrieve authorization crumb! Unable to fetch quotes "
 "data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:746
+#: desklet.js:805
 msgid "Cannot display quotes information for symbols: "
 msgstr ""
 
-#: desklet.js:747
+#: desklet.js:806
 msgid "The following error occurred: "
 msgstr ""
 
