@@ -17,13 +17,29 @@ Tested with
 
 ## Installation
 
-Either follow the installation instructions on [Cinnamon spices](https://cinnamon-spices.linuxmint.com/desklets), or manually download the folder **yfquotes@thegli** (below "files") and copy the folder and its content to `~/.local/share/cinnamon/desklets/`
+Either follow the installation instructions on [Cinnamon spices](https://cinnamon-spices.linuxmint.com/desklets) (recommended), or manually download the folder **yfquotes@thegli** (below "files") and copy the folder and its content to `~/.local/share/cinnamon/desklets/`
 
 ## Configuration
 
-Check out the desklet configuration settings, and choose the data refresh period, the list of quotes to show (see also [Known Limitations](#known-limitations)), and quote details to display. The default list contains the Dow 30 companies.
+Check out the desklet configuration settings, and choose the data refresh period, the list of quotes to show, and quote details to display. The default list contains the Dow 30 companies.
+
+## Troubleshooting
+
+Problem: The desklet fails to load data, and shows error message "Status: 429 Too many Requests".  
+Solution: Enable option *Send custom User-Agent header* found on the first tab "Quotes" in the configuration settings.
 
 ## Release Notes
+
+### next
+
+Features:
+
+- add Spanish translation (courtesy of [haggen88](https://github.com/haggen88))
+- add Finnish translation (courtesy of [MahtiAnkka](https://github.com/MahtiAnkka))
+- update Hungarian translation (courtesy of [KAMI911](https://github.com/KAMI911))
+- update Danish translation (courtesy of [Alan01](https://github.com/Alan01))
+- update Italian translation (courtesy of [Dragone2](https://github.com/Dragone2))
+- brush up this README document
 
 ### 0.9.0 - August 28, 2023
 
@@ -219,10 +235,6 @@ Features:
 Bugfixes:
 
 - change data retrieval to alternative url from Yahoo Finance
-
-## Known Limitations
-
-- The quotes list might not be editable using the desklet's configuration dialog (encountered in Cinnamon 3.6 and earlier 3.x versions). As a workaround, export the configuration using the standard desklet settings menu to a (json) file, then edit the file with your favorite text editor, and finally import the configuration file again.
 
 ## Credits
 
