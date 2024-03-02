@@ -25,7 +25,7 @@ Check out the desklet configuration settings, and choose the data refresh period
 
 ## Troubleshooting
 
-Problem: The desklet fails to load data, and shows error message "Status: 429 Too many Requests".  
+Problem: The desklet fails to load data, and shows error message "Status: 429 Too Many Requests".  
 Solution: Enable option *Send custom User-Agent header* found on the first tab "Quotes" in the configuration settings.
 
 ## Release Notes
@@ -40,6 +40,10 @@ Features:
 - update Danish translation (courtesy of [Alan01](https://github.com/Alan01))
 - update Italian translation (courtesy of [Dragone2](https://github.com/Dragone2))
 - brush up this README document
+
+Bugfixes:
+
+- handle HTTP response status codes not supported by libsoup3
 
 ### 0.9.0 - August 28, 2023
 

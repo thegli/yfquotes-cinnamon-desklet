@@ -110,7 +110,8 @@ YahooFinanceQuoteUtils.prototype = {
             if (IS_SOUP_2) {
                 return soupMessage.status_code === Soup.KnownStatusCode.OK;
             } else {
-                return soupMessage.get_status() === Soup.Status.OK;
+                // get_status() throws exception on any value missing in enum SoupStatus, so better check reason_phrase
+                return soupMessage.get_reason_phrase() === "OK";
             }
         }
         return false;
@@ -121,7 +122,20 @@ YahooFinanceQuoteUtils.prototype = {
             if (IS_SOUP_2) {
                 return soupMessage.status_code + " " + soupMessage.reason_phrase;
             } else {
-                return soupMessage.get_status() + " " + soupMessage.get_reason_phrase();
+                let reason = soupMessage.get_reason_phrase();
+                let status = "unknown status";
+                try {
+                    status = soupMessage.get_status();
+                } catch (e) {
+                    // get_status() throws exception on any value missing in enum SoupStatus
+                    // YF is known to return "429 Too Many Requests", which is unfortunately missing in SoupStatus
+                    if (e.message.indexOf("429") > -1) {
+                        status = "429";
+                        reason = "Too Many Requests";
+                    }
+                }
+                
+                return status + " " + reason;
             }
         }
         return "no status available";
