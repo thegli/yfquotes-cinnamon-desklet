@@ -44,6 +44,7 @@ Features:
 Bugfixes:
 
 - handle HTTP response status codes not supported by libsoup3
+- update DOW 30 component symbols
 
 ### 0.9.0 - August 28, 2023
 
