@@ -305,6 +305,12 @@ YahooFinanceQuoteReader.prototype = {
 
     getFinanceData: function(quoteSymbols, customUserAgent, callback) {
         const _that = this;
+        
+        if (quoteSymbols.join().length === 0) {
+            callback.call(_that, _that.buildErrorResponse(_("Empty quotes list. Open settings and add some symbols.")));
+            return;
+        }
+        
         const requestUrl = this.createYahooQueryUrl(quoteSymbols);
         const message = Soup.Message.new("GET", requestUrl);
 
@@ -349,7 +355,7 @@ YahooFinanceQuoteReader.prototype = {
     },
 
     createYahooQueryUrl: function(quoteSymbols) {
-        const queryUrl = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + quoteSymbols.join(",") + "&crumb=" + _crumb;
+        const queryUrl = "https://query1.finance.yahoo.com/v7/finance/quote?symbols=" + quoteSymbols.join() + "&crumb=" + _crumb;
         logDebug("YF query URL: " + queryUrl);
         return queryUrl;
     },
@@ -774,7 +780,7 @@ StockQuoteDesklet.prototype = {
     },
 
     onUpdate: function() {
-        const quoteSymbols = this.quoteSymbolsText.split("\n");
+        const quoteSymbols = this.quoteSymbolsText.trim().split("\n");
         const customUserAgent = this.sendCustomUserAgent ? this.customUserAgent : null;
 
         try {

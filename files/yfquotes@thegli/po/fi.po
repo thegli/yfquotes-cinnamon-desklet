@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-05-22 21:38+0200\n"
+"POT-Creation-Date: 2024-06-12 20:24+0200\n"
 "PO-Revision-Date: 2023-12-22 11:33+0200\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>\n"
 "Language-Team: \n"
@@ -18,44 +18,48 @@ msgstr ""
 "X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: desklet.js:326 desklet.js:345
+#: desklet.js:310
+msgid "Empty quotes list. Open settings and add some symbols."
+msgstr ""
+
+#: desklet.js:332 desklet.js:351
 msgid "Yahoo Finance service not available!\\nStatus: "
 msgstr "Yahoo Finance palvelu ei ole saatavilla!\\nTila: "
 
-#: desklet.js:730
+#: desklet.js:736
 msgid "Updated at "
 msgstr "Päivitetty klo "
 
-#: desklet.js:751
+#: desklet.js:757
 msgid "Error: "
 msgstr "Virhe: "
 
-#: desklet.js:813
+#: desklet.js:819
 msgid ""
 "Failed to retrieve authorization parameter! Unable to fetch quotes data."
 "\\nStatus: "
 msgstr "Valtuutuksen haku epäonnistui! Tietoja ei voi noutaa.\\nTila: "
 
-#: desklet.js:838
+#: desklet.js:844
 msgid "Consent processing failed! Unable to fetch quotes data.\\nStatus: "
 msgstr "Suostumuksen käsittely epäonnistui! Tietoja ei voi noutaa.\\nTila: "
 
-#: desklet.js:843
+#: desklet.js:849
 msgid ""
 "Consent processing not completed! Unable to fetch quotes data.\\nStatus: "
 msgstr "Suostumusta ei ole suoritettu loppuun! Tietoja ei voi noutaa.\\nTila: "
 
-#: desklet.js:865
+#: desklet.js:871
 msgid ""
 "Failed to retrieve authorization crumb! Unable to fetch quotes data."
 "\\nStatus: "
 msgstr "Valtuutuksen nouto epäonnistui! Tietoja ei voi noutaa.\\nTila: "
 
-#: desklet.js:892
+#: desklet.js:898
 msgid "Cannot display quotes information for symbols: "
 msgstr "Symbolien tietoja ei voi näyttää: "
 
-#: desklet.js:893
+#: desklet.js:899
 msgid "The following error occurred: "
 msgstr "Tapahtui seuraava virhe: "
 

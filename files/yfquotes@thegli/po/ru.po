@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-05-22 21:38+0200\n"
+"POT-Creation-Date: 2024-06-12 20:24+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,44 +17,48 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
-#: desklet.js:326 desklet.js:345
+#: desklet.js:310
+msgid "Empty quotes list. Open settings and add some symbols."
+msgstr ""
+
+#: desklet.js:332 desklet.js:351
 msgid "Yahoo Finance service not available!\\nStatus: "
 msgstr "Сервис Yahoo Finance не доступен!"
 
-#: desklet.js:730
+#: desklet.js:736
 msgid "Updated at "
 msgstr "Обновлено в "
 
-#: desklet.js:751
+#: desklet.js:757
 msgid "Error: "
 msgstr "Ошибка: "
 
-#: desklet.js:813
+#: desklet.js:819
 msgid ""
 "Failed to retrieve authorization parameter! Unable to fetch quotes data."
 "\\nStatus: "
 msgstr ""
 
-#: desklet.js:838
+#: desklet.js:844
 msgid "Consent processing failed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:843
+#: desklet.js:849
 msgid ""
 "Consent processing not completed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:865
+#: desklet.js:871
 msgid ""
 "Failed to retrieve authorization crumb! Unable to fetch quotes data."
 "\\nStatus: "
 msgstr ""
 
-#: desklet.js:892
+#: desklet.js:898
 msgid "Cannot display quotes information for symbols: "
 msgstr "Невозможно отобразить информацию о котировках для биржевых символов: "
 
-#: desklet.js:893
+#: desklet.js:899
 msgid "The following error occurred: "
 msgstr "Произошла ошибка: "
 

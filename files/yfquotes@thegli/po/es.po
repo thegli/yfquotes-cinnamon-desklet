@@ -7,29 +7,33 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-05-22 21:38+0200\n"
-"PO-Revision-Date: 2024-03-15 19:21-0300\n"
+"POT-Creation-Date: 2024-06-12 20:24+0200\n"
+"PO-Revision-Date: 2024-05-22 18:18-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
-#: desklet.js:326 desklet.js:345
+#: desklet.js:310
+msgid "Empty quotes list. Open settings and add some symbols."
+msgstr ""
+
+#: desklet.js:332 desklet.js:351
 msgid "Yahoo Finance service not available!\\nStatus: "
 msgstr "El servicio de Yahoo Finanzas no está disponible: "
 
-#: desklet.js:730
+#: desklet.js:736
 msgid "Updated at "
 msgstr "Actualizado en "
 
-#: desklet.js:751
+#: desklet.js:757
 msgid "Error: "
 msgstr "Error: "
 
-#: desklet.js:813
+#: desklet.js:819
 msgid ""
 "Failed to retrieve authorization parameter! Unable to fetch quotes data."
 "\\nStatus: "
@@ -37,20 +41,20 @@ msgstr ""
 "Error al recuperar el parámetro de autorización. No se han podido recuperar "
 "los datos de las cotizaciones: "
 
-#: desklet.js:838
+#: desklet.js:844
 msgid "Consent processing failed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 "No se ha podido procesar el consentimiento. No se han podido recuperar los "
 "datos de las cotizaciones: "
 
-#: desklet.js:843
+#: desklet.js:849
 msgid ""
 "Consent processing not completed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 "No se ha completado el procesamiento del consentimiento. No se han podido "
 "recuperar los datos de las cotizaciones: "
 
-#: desklet.js:865
+#: desklet.js:871
 msgid ""
 "Failed to retrieve authorization crumb! Unable to fetch quotes data."
 "\\nStatus: "
@@ -58,11 +62,11 @@ msgstr ""
 "¡No se pudo recuperar la ruta de autorización! No se pueden recuperar los "
 "datos de las cotizaciones: "
 
-#: desklet.js:892
+#: desklet.js:898
 msgid "Cannot display quotes information for symbols: "
 msgstr "No se puede mostrar información de cotizaciones para los símbolos: "
 
-#: desklet.js:893
+#: desklet.js:899
 msgid "The following error occurred: "
 msgstr "El siguiente error ha ocurrido: "
 
@@ -210,11 +214,13 @@ msgstr "Muestra la fecha de la última actualización de las cotizaciones."
 
 #. settings-schema.json->manualDataUpdate->description
 msgid "Manual update"
-msgstr ""
+msgstr "Actualización manual"
 
 #. settings-schema.json->manualDataUpdate->tooltip
 msgid "Click last update timestamp to instantly refresh quotes data"
 msgstr ""
+"Haga clic en la fecha de la última actualización para actualizar "
+"instantáneamente los datos de las cotizaciones"
 
 #. settings-schema.json->sendCustomUserAgent->description
 msgid "Send custom User-Agent header"

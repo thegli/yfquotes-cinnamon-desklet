@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-05-22 21:38+0200\n"
+"POT-Creation-Date: 2024-06-12 20:24+0200\n"
 "PO-Revision-Date: 2023-08-28 16:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,19 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
 
-#: desklet.js:326 desklet.js:345
+#: desklet.js:310
+msgid "Empty quotes list. Open settings and add some symbols."
+msgstr "Liste der Symbole ist leer. Öffne die Einstellungen und füge Symbole hinzu."
+
+#: desklet.js:332 desklet.js:351
 msgid "Yahoo Finance service not available!\\nStatus: "
 msgstr "Yahoo Finance Service nicht verfügbar!\\nStatus: "
 
-#: desklet.js:730
+#: desklet.js:736
 msgid "Updated at "
 msgstr "Aktualisiert um "
 
-#: desklet.js:751
+#: desklet.js:757
 msgid "Error: "
 msgstr "Fehler: "
 
-#: desklet.js:813
+#: desklet.js:819
 msgid ""
 "Failed to retrieve authorization parameter! Unable to fetch quotes data."
 "\\nStatus: "
@@ -37,20 +41,20 @@ msgstr ""
 "Empfang von Autorisierungsparameter ist fehlgeschlagen! Finanzdaten-Abfrage "
 "nicht möglich.\\nStatus: "
 
-#: desklet.js:838
+#: desklet.js:844
 msgid "Consent processing failed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 "Consent-Erteilung ist fehlgeschlagen! Finanzdaten-Abfrage nicht möglich."
 "\\nStatus: "
 
-#: desklet.js:843
+#: desklet.js:849
 msgid ""
 "Consent processing not completed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 "Consent-Erteilung nicht abgeschlossen! Finanzdaten-Abfrage nicht möglich."
 "\\nStatus: "
 
-#: desklet.js:865
+#: desklet.js:871
 msgid ""
 "Failed to retrieve authorization crumb! Unable to fetch quotes data."
 "\\nStatus: "
@@ -58,11 +62,11 @@ msgstr ""
 "Emfang von Autorisierungs-Crumb ist fehlgeschlagen! Finanzdaten-Abfrage "
 "nicht möglich.\\nStatus: "
 
-#: desklet.js:892
+#: desklet.js:898
 msgid "Cannot display quotes information for symbols: "
 msgstr "Finanzdaten können nicht angezeigt werden für die Symbole: "
 
-#: desklet.js:893
+#: desklet.js:899
 msgid "The following error occurred: "
 msgstr "Folgender Fehler ist aufgetreten: "
 
