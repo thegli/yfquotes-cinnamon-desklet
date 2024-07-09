@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-07-10 00:21+0200\n"
+"POT-Creation-Date: 2024-07-10 00:38+0200\n"
 "PO-Revision-Date: 2023-08-28 16:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -26,15 +26,15 @@ msgstr ""
 msgid "Yahoo Finance service not available!\\nStatus: "
 msgstr "Yahoo Finance Service nicht verfügbar!\\nStatus: "
 
-#: desklet.js:736
+#: desklet.js:738
 msgid "Updated at "
 msgstr "Aktualisiert um "
 
-#: desklet.js:757
+#: desklet.js:759
 msgid "Error: "
 msgstr "Fehler: "
 
-#: desklet.js:819
+#: desklet.js:827
 msgid ""
 "Failed to retrieve authorization parameter! Unable to fetch quotes data."
 "\\nStatus: "
@@ -42,20 +42,20 @@ msgstr ""
 "Empfang von Autorisierungsparameter ist fehlgeschlagen! Finanzdaten-Abfrage "
 "nicht möglich.\\nStatus: "
 
-#: desklet.js:844
+#: desklet.js:852
 msgid "Consent processing failed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 "Consent-Erteilung ist fehlgeschlagen! Finanzdaten-Abfrage nicht möglich."
 "\\nStatus: "
 
-#: desklet.js:849
+#: desklet.js:857
 msgid ""
 "Consent processing not completed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 "Consent-Erteilung nicht abgeschlossen! Finanzdaten-Abfrage nicht möglich."
 "\\nStatus: "
 
-#: desklet.js:871
+#: desklet.js:879
 msgid ""
 "Failed to retrieve authorization crumb! Unable to fetch quotes data."
 "\\nStatus: "
@@ -63,11 +63,11 @@ msgstr ""
 "Emfang von Autorisierungs-Crumb ist fehlgeschlagen! Finanzdaten-Abfrage "
 "nicht möglich.\\nStatus: "
 
-#: desklet.js:898
+#: desklet.js:906
 msgid "Cannot display quotes information for symbols: "
 msgstr "Finanzdaten können nicht angezeigt werden für die Symbole: "
 
-#: desklet.js:899
+#: desklet.js:907
 msgid "The following error occurred: "
 msgstr "Folgender Fehler ist aufgetreten: "
 
@@ -181,6 +181,14 @@ msgstr "Hintergrund Transparenz"
 msgid "The higher the value, the more solid the desklet background"
 msgstr "Je grösser der Wert, desto deckender der Desklet Hintergrund"
 
+#. settings-schema.json->backgroundColor->description
+msgid "Background color"
+msgstr "Hintergrundfarbe"
+
+#. settings-schema.json->backgroundColor->tooltip
+msgid "Desklet background color"
+msgstr "Desklet Hintergrundfarbe"
+
 #. settings-schema.json->showVerticalScrollbar->description
 msgid "Show vertical scrollbar"
 msgstr "Senkrechte Bildlaufleiste anzeigen"
@@ -218,7 +226,6 @@ msgid "Manual and automatic update"
 msgstr "Manuelle und automatische Aktualisierung"
 
 #. settings-schema.json->manualDataUpdate->tooltip
-#, fuzzy
 msgid ""
 "Click last update timestamp to instantly refresh quotes data. Automatic "
 "update is still performed periodically."

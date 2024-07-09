@@ -90,7 +90,7 @@
     "layoutEffectsSection": {
       "type": "section",
       "title": "Effects",
-      "keys": ["transparency", "showVerticalScrollbar"]
+      "keys": ["transparency", "backgroundColor", "showVerticalScrollbar"]
     }
   },
   "width": {
@@ -121,6 +121,12 @@
     "step": 0.05,
     "description": "Background transparency",
     "tooltip": "The higher the value, the more solid the desklet background"
+  },
+  "backgroundColor": {
+    "type": "colorchooser",
+    "description": "Background color",
+    "tooltip": "Desklet background color",
+    "default": "rgb(0,0,0)"
   },
   "showVerticalScrollbar": {
     "type": "checkbox",

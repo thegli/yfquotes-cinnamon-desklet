@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# This file is put in the public domain.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Yahoo Finance Quotes Desklet
+# Copyright (C) 2018 Thomas Egli
+# This file is distributed under the same license as the Yahoo Finance Quotes Desklet package.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: yfquotes@thegli 0.12.0\n"
+"Project-Id-Version: yfquotes@thegli 0.13.0\n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-07-10 00:21+0200\n"
+"POT-Creation-Date: 2024-07-10 00:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,40 +25,40 @@ msgstr ""
 msgid "Yahoo Finance service not available!\\nStatus: "
 msgstr ""
 
-#: desklet.js:736
+#: desklet.js:738
 msgid "Updated at "
 msgstr ""
 
-#: desklet.js:757
+#: desklet.js:759
 msgid "Error: "
 msgstr ""
 
-#: desklet.js:819
+#: desklet.js:827
 msgid ""
 "Failed to retrieve authorization parameter! Unable to fetch quotes data."
 "\\nStatus: "
 msgstr ""
 
-#: desklet.js:844
+#: desklet.js:852
 msgid "Consent processing failed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:849
+#: desklet.js:857
 msgid ""
 "Consent processing not completed! Unable to fetch quotes data.\\nStatus: "
 msgstr ""
 
-#: desklet.js:871
+#: desklet.js:879
 msgid ""
 "Failed to retrieve authorization crumb! Unable to fetch quotes data."
 "\\nStatus: "
 msgstr ""
 
-#: desklet.js:898
+#: desklet.js:906
 msgid "Cannot display quotes information for symbols: "
 msgstr ""
 
-#: desklet.js:899
+#: desklet.js:907
 msgid "The following error occurred: "
 msgstr ""
 
@@ -168,6 +168,14 @@ msgstr ""
 
 #. settings-schema.json->transparency->tooltip
 msgid "The higher the value, the more solid the desklet background"
+msgstr ""
+
+#. settings-schema.json->backgroundColor->description
+msgid "Background color"
+msgstr ""
+
+#. settings-schema.json->backgroundColor->tooltip
+msgid "Desklet background color"
 msgstr ""
 
 #. settings-schema.json->showVerticalScrollbar->description
