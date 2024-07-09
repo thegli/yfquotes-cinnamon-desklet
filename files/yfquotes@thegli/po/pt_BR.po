@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-06-12 20:24+0200\n"
+"POT-Creation-Date: 2024-07-10 00:21+0200\n"
 "PO-Revision-Date: 2021-09-30 13:34-0300\n"
 "Last-Translator: Marcelo Aof\n"
 "Language-Team: \n"
@@ -206,11 +206,13 @@ msgstr ""
 "vez."
 
 #. settings-schema.json->manualDataUpdate->description
-msgid "Manual update"
+msgid "Manual and automatic update"
 msgstr ""
 
 #. settings-schema.json->manualDataUpdate->tooltip
-msgid "Click last update timestamp to instantly refresh quotes data"
+msgid ""
+"Click last update timestamp to instantly refresh quotes data. Automatic "
+"update is still performed periodically."
 msgstr ""
 
 #. settings-schema.json->sendCustomUserAgent->description

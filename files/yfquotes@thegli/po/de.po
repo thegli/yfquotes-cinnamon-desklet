@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-06-12 20:24+0200\n"
+"POT-Creation-Date: 2024-07-10 00:21+0200\n"
 "PO-Revision-Date: 2023-08-28 16:36+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,7 +19,8 @@ msgstr ""
 
 #: desklet.js:310
 msgid "Empty quotes list. Open settings and add some symbols."
-msgstr "Liste der Symbole ist leer. Öffne die Einstellungen und füge Symbole hinzu."
+msgstr ""
+"Liste der Symbole ist leer. Öffne die Einstellungen und füge Symbole hinzu."
 
 #: desklet.js:332 desklet.js:351
 msgid "Yahoo Finance service not available!\\nStatus: "
@@ -213,13 +214,17 @@ msgid "Display timestamp when quotes were updated last"
 msgstr "Zeigt den Zeitstempel der letzten Aktualisierung der Finanzdaten an"
 
 #. settings-schema.json->manualDataUpdate->description
-#, fuzzy
-msgid "Manual update"
-msgstr "Manuelle Aktualisierung"
+msgid "Manual and automatic update"
+msgstr "Manuelle und automatische Aktualisierung"
 
 #. settings-schema.json->manualDataUpdate->tooltip
-msgid "Click last update timestamp to instantly refresh quotes data"
-msgstr "Zeitstempel anklicken für sofortige Aktualisierung"
+#, fuzzy
+msgid ""
+"Click last update timestamp to instantly refresh quotes data. Automatic "
+"update is still performed periodically."
+msgstr ""
+"Zeitstempel anklicken für sofortige Aktualisierung. Die automatische "
+"Aktualisierung findet weiterhin periodisch statt."
 
 #. settings-schema.json->sendCustomUserAgent->description
 msgid "Send custom User-Agent header"

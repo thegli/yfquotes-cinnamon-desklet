@@ -1,6 +1,6 @@
-# Yahoo Finance Quotes Desklet
-# Copyright (C) 2018 Thomas Egli
-# This file is distributed under the same license as the Yahoo Finance Quotes Desklet package.
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: yfquotes@thegli 0.12.0\n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-06-12 20:24+0200\n"
+"POT-Creation-Date: 2024-07-10 00:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -201,11 +201,13 @@ msgid "Display timestamp when quotes were updated last"
 msgstr ""
 
 #. settings-schema.json->manualDataUpdate->description
-msgid "Manual update"
+msgid "Manual and automatic update"
 msgstr ""
 
 #. settings-schema.json->manualDataUpdate->tooltip
-msgid "Click last update timestamp to instantly refresh quotes data"
+msgid ""
+"Click last update timestamp to instantly refresh quotes data. Automatic "
+"update is still performed periodically."
 msgstr ""
 
 #. settings-schema.json->sendCustomUserAgent->description

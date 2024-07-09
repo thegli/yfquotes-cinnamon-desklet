@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: yfquotes@thegli 0.12.1\n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-06-29 04:26-0400\n"
+"POT-Creation-Date: 2024-07-10 00:21+0200\n"
 "PO-Revision-Date: 2024-06-29 04:34-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -214,11 +214,15 @@ msgid "Display timestamp when quotes were updated last"
 msgstr "Megjeleníti a megállapítások utolsó frissítéskeresésének időbélyegét."
 
 #. settings-schema.json->manualDataUpdate->description
-msgid "Manual update"
+#, fuzzy
+msgid "Manual and automatic update"
 msgstr "Kézi frissítés"
 
 #. settings-schema.json->manualDataUpdate->tooltip
-msgid "Click last update timestamp to instantly refresh quotes data"
+#, fuzzy
+msgid ""
+"Click last update timestamp to instantly refresh quotes data. Automatic "
+"update is still performed periodically."
 msgstr ""
 "Kattintson az utolsó frissítés időbélyegére az árajánlatok adatainak "
 "azonnali frissítéséhez"

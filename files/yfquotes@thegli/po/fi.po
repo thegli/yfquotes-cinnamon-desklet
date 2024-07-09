@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/linuxmint/cinnamon-spices-desklets/"
 "issues\n"
-"POT-Creation-Date: 2024-06-12 20:24+0200\n"
+"POT-Creation-Date: 2024-07-10 00:21+0200\n"
 "PO-Revision-Date: 2023-12-22 11:33+0200\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>\n"
 "Language-Team: \n"
@@ -204,11 +204,13 @@ msgid "Display timestamp when quotes were updated last"
 msgstr "Näytää ajan, jolloin kurssit päivitettiin viimeksi."
 
 #. settings-schema.json->manualDataUpdate->description
-msgid "Manual update"
+msgid "Manual and automatic update"
 msgstr ""
 
 #. settings-schema.json->manualDataUpdate->tooltip
-msgid "Click last update timestamp to instantly refresh quotes data"
+msgid ""
+"Click last update timestamp to instantly refresh quotes data. Automatic "
+"update is still performed periodically."
 msgstr ""
 
 #. settings-schema.json->sendCustomUserAgent->description

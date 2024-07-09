@@ -147,8 +147,8 @@
   "manualDataUpdate": {
     "type": "checkbox",
     "default": false,
-    "description": "Manual update",
-    "tooltip": "Click last update timestamp to instantly refresh quotes data",
+    "description": "Manual and automatic update",
+    "tooltip": "Click last update timestamp to instantly refresh quotes data. Automatic update is still performed periodically.",
     "dependency": "showLastUpdateTimestamp"
   },
   "sendCustomUserAgent": {

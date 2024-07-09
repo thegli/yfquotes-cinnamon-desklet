@@ -52,6 +52,7 @@ Features:
 Bugfixes:
 
 - display better error message if no symbols are configured
+- improve description for manual update feature
 
 ### 0.12.0 - May 22, 2024
 
