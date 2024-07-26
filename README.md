@@ -42,6 +42,15 @@ To disable the debug log mode, delete the "DEBUG" file, and restart the Cinnamon
 
 ## Release Notes
 
+### 0.13.1 - next
+
+Features:
+
+- add Catalan translation (courtesy of [Odyssey]((https://github.com/odyssey))
+- update Dutch translation (courtesy of [qadzek](https://github.com/qadzek))
+- update Hungarian translation (courtesy of [bossbob88](https://github.com/bossbob88))
+- update Spanish translation (courtesy of [haggen88](https://github.com/haggen88))
+
 ### 0.13.0 - July 10, 2024
 
 Features:
