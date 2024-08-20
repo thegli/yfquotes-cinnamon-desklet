@@ -650,7 +650,7 @@ StockQuoteDesklet.prototype = {
             this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "sortCriteria", "sortCriteria",
             this.onSettingsChanged, null);
-        this.settings.bindProperty(Settings.BindingDirection.IN, "sortDirection", "sortDirection",
+        this.settings.bindProperty(Settings.BindingDirection.IN, "sortDirection", "sortAscending",
             this.onSettingsChanged, null);
         this.settings.bindProperty(Settings.BindingDirection.IN, "showChangeIcon", "showChangeIcon",
             this.onSettingsChanged, null);
@@ -913,14 +913,15 @@ StockQuoteDesklet.prototype = {
         }
 
         const clone = quotes.slice(0);
+        const numberPattern = /^-?\d+(\.\d+)?$/;
         clone.sort(function(q1, q2) {
             let p1 = "";
             if (q1.hasOwnProperty(prop) && typeof q1[prop] !== "undefined" && q1[prop] !== null) {
-                p1 = q1[prop].toString().match(/^\d+$/) ? + q1[prop] : q1[prop];
+                p1 = q1[prop].toString().match(numberPattern) ? + q1[prop] : q1[prop].toLowerCase();
             }
             let p2 = "";
             if (q2.hasOwnProperty(prop) && typeof q2[prop] !== "undefined" && q2[prop] !== null) {
-                p2 = q2[prop].toString().match(/^\d+$/) ? + q2[prop] : q2[prop];
+                p2 = q2[prop].toString().match(numberPattern) ? + q2[prop] : q2[prop].toLowerCase();
             }
 
             return ((p1 < p2) ? -1 : ((p1 > p2) ? 1 : 0)) * direction;
@@ -935,7 +936,7 @@ StockQuoteDesklet.prototype = {
 
         // optional sort
         if (this.sortCriteria && this.sortCriteria !== "none") {
-            quotes[0] = this.sortByProperty(quotes[0], this.sortCriteria, this.sortDirection ? 1 : -1);
+            quotes[0] = this.sortByProperty(quotes[0], this.sortCriteria, this.sortAscending ? 1 : -1);
         }
 
         // in case of errors, show details
