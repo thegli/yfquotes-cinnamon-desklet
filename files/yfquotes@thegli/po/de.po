@@ -436,7 +436,7 @@ msgstr "Marktpreis anzeigen"
 
 #. settings-schema.json->showMarketPrice->tooltip
 msgid "Display the current market price (eg. 146.79)"
-msgstr "Zeigt den aktuellen Marktpreis an (z.B. 146.79)"
+msgstr "Zeigt den aktuellen Marktpreis an (z.B. 146,79)"
 
 #. settings-schema.json->showCurrencyCode->description
 msgid "Show currency symbol"
@@ -452,15 +452,15 @@ msgstr "Absolute Veränderung anzeigen"
 
 #. settings-schema.json->showAbsoluteChange->tooltip
 msgid "Display the absolute change of the market price (eg. +0.739)"
-msgstr "Zeigt die absolute Veränderung des Marktpreises an (z.B. +0.739)"
+msgstr "Zeigt die absolute Veränderung des Marktpreises an (z.B. +0,739)"
 
 #. settings-schema.json->showPercentChange->description
 msgid "Show percent change"
 msgstr "Prozentuale Veränderung anzeigen"
 
 #. settings-schema.json->showPercentChange->tooltip
-msgid "Display the percent change of the market price (eg. +0.53%)"
-msgstr "Zeigt die relative Veränderung des Marktpreises an (z.B. +0.53%)"
+msgid "Display the percent change of the market price (eg. -0.53%)"
+msgstr "Zeigt die relative Veränderung des Marktpreises an (z.B. -0,53%)"
 
 #. settings-schema.json->colorPercentChange->description
 msgid "Use trend colors for percent change"

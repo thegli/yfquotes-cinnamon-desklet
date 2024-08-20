@@ -463,9 +463,9 @@ msgid "Show percent change"
 msgstr "Mostrar canvi percentual"
 
 #. settings-schema.json->showPercentChange->tooltip
-msgid "Display the percent change of the market price (eg. +0.53%)"
+msgid "Display the percent change of the market price (eg. -0.53%)"
 msgstr ""
-"Mostra la variació percentual del preu de mercat (per exemple, +0.53%)"
+"Mostra la variació percentual del preu de mercat (per exemple, -0.53%)"
 
 #. settings-schema.json->colorPercentChange->description
 msgid "Use trend colors for percent change"

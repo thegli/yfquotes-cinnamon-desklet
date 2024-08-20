@@ -425,7 +425,7 @@ msgid "Show percent change"
 msgstr "변화율 표시"
 
 #. settings-schema.json->showPercentChange->tooltip
-msgid "Display the percent change of the market price (eg. +0.53%)"
+msgid "Display the percent change of the market price (eg. -0.53%)"
 msgstr "시장 가격의 백분율 변화를 표시합니다 (예 : + 0.53 %)."
 
 #. settings-schema.json->colorPercentChange->description

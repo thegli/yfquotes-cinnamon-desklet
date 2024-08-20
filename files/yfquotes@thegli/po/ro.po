@@ -437,9 +437,9 @@ msgid "Show percent change"
 msgstr "Afișează modificarea procentuală"
 
 #. settings-schema.json->showPercentChange->tooltip
-msgid "Display the percent change of the market price (eg. +0.53%)"
+msgid "Display the percent change of the market price (eg. -0.53%)"
 msgstr ""
-"Afișează modificarea procentuală a prețului de piață (de exemplu, +0,53%)."
+"Afișează modificarea procentuală a prețului de piață (de exemplu, -0,53%)."
 
 #. settings-schema.json->colorPercentChange->description
 msgid "Use trend colors for percent change"

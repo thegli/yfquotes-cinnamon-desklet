@@ -300,7 +300,7 @@
     "type": "checkbox",
     "default": true,
     "description": "Show percent change",
-    "tooltip": "Display the percent change of the market price (eg. +0.53%)"
+    "tooltip": "Display the percent change of the market price (eg. -0.53%)"
   },
   "colorPercentChange": {
     "type": "checkbox",
