@@ -25,7 +25,7 @@
     "dataSymbolsSection": {
       "type": "section",
       "title": "Quotes",
-      "keys": ["quoteSymbols"]
+      "keys": ["quoteSymbols","updateDataButton"]
     },
     "dataUpdateSection": {
       "type": "section",
@@ -218,6 +218,12 @@
     "default": "MMM\nAMZN\nAXP\nAMGN\nAAPL\nBA\nCAT\nCVX\nCSCO\nKO\nDOW\nGS\nHD\nHON\nINTC\nIBM\nJNJ\nJPM\nMCD\nMRK\nMSFT\nNKE\nPG\nCRM\nTRV\nUNH\nVZ\nV\nWMT\nDIS",
     "description": "Quote symbols",
     "tooltip": "List of quote symbols, separated with line-breaks"
+  },
+  "updateDataButton": {
+    "type": "button",
+    "callback": "onQuotesListChanged",
+    "description": "Refresh quotes data",
+    "tooltip": "Apply and refresh quotes"
   },
   "sortCriteria": {
     "type": "radiogroup",
