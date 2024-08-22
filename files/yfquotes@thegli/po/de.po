@@ -235,7 +235,7 @@ msgstr ""
 
 #. settings-schema.json->sendCustomUserAgent->description
 msgid "Send custom User-Agent header"
-msgstr "Sende individuellen User-Agent Header"
+msgstr "Individuellen User-Agent Header senden"
 
 #. settings-schema.json->sendCustomUserAgent->tooltip
 msgid ""
@@ -275,7 +275,7 @@ msgstr "Anzahl der Dezimalstellen nach dem Komma, auf die gerundet wird"
 
 #. settings-schema.json->strictRounding->description
 msgid "Strict rounding"
-msgstr "Runden auf feste Anzahl Dezimalstellen"
+msgstr "Auf feste Anzahl Dezimalstellen runden"
 
 #. settings-schema.json->strictRounding->tooltip
 msgid ""
@@ -374,7 +374,7 @@ msgstr "Sortieren der Liste der Finanzinstrumente"
 
 #. settings-schema.json->sortDirection->description
 msgid "Sort in ascending order"
-msgstr "Sortiert in absteigender Reihenfolge"
+msgstr "In absteigender Reihenfolge sortieren"
 
 #. settings-schema.json->sortDirection->tooltip
 msgid ""
@@ -404,7 +404,7 @@ msgstr ""
 
 #. settings-schema.json->useLongQuoteName->description
 msgid "Use long version for verbose name"
-msgstr "Verwende die längere Version des Namens"
+msgstr "Längere Version des Namens verwenden"
 
 #. settings-schema.json->useLongQuoteName->tooltip
 msgid ""
@@ -472,7 +472,7 @@ msgstr "Zeigt die relative Veränderung des Marktpreises an (z.B. -0,53%)"
 
 #. settings-schema.json->colorPercentChange->description
 msgid "Use trend colors for percent change"
-msgstr "Verwende Trend-Farben bei prozentualer Veränderung"
+msgstr "Trend-Farben bei prozentualer Veränderung anwenden"
 
 #. settings-schema.json->colorPercentChange->tooltip
 msgid "Color the percent change to show the trend"
