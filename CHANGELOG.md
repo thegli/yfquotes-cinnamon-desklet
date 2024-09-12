@@ -1,3 +1,12 @@
+### 0.15.1 - next
+
+Features:
+
+- update Catalan translation (courtesy of [Odyssey](https://github.com/odyssey))
+- update Dutch translation (courtesy of [qadzek](https://github.com/qadzek))
+- update Spanish translation (courtesy of [haggen88](https://github.com/haggen88))
+
+
 ### 0.15.0 - September 2, 2024
 
 Features:
