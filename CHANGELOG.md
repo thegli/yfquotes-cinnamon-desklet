@@ -6,6 +6,9 @@ Features:
 - update Dutch translation (courtesy of [qadzek](https://github.com/qadzek))
 - update Spanish translation (courtesy of [haggen88](https://github.com/haggen88))
 
+Bugfixes:
+
+- cache quotes responses for each desklet instance separately
 
 ### 0.15.0 - September 2, 2024
 
