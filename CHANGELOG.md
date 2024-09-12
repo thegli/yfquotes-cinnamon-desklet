@@ -1,4 +1,4 @@
-### 0.15.1 - next
+### 0.15.1 - September 12, 2024
 
 Features:
 
@@ -9,6 +9,7 @@ Features:
 Bugfixes:
 
 - cache quotes responses for each desklet instance separately
+- restore automatic quotes data refresh on settings import
 
 ### 0.15.0 - September 2, 2024
 

@@ -80,6 +80,7 @@ let _crumb = null;
 // cache the last QF quotes response
 const _lastResponses = new Map();
 _lastResponses.set("default", {
+    symbolsArgument: "",
     responseResult: [],
     // we should never see this error message
     responseError: _("No quotes data to display"),
@@ -159,6 +160,15 @@ YahooFinanceQuoteUtils.prototype = {
             weight: customAttributes.has("weight") ? customAttributes.get("weight") : "normal",
             color: customAttributes.has("color") ? customAttributes.get("color") : null,
         };
+    },
+
+    compareSymbolsArgument: function(symbolsArgument, quoteSymbolsText) {
+        const argumentFromText = this.buildSymbolsArgument(quoteSymbolsText);
+        if (symbolsArgument.length === 0 || argumentFromText.length === 0) {
+            return false;
+        }
+
+        return symbolsArgument === argumentFromText;
     },
 
     isOkStatus: function(soupMessage) {
@@ -888,7 +898,7 @@ StockQuoteDesklet.prototype = {
         logDebug("onQuotesListChanged");
 
         if (this.updateInProgress) {
-            logInfo("Data refresh already in progress");
+            logDebug("Data refresh in progress for desklet id " + this.id);
             return;
         }
         this.removeUpdateTimer();
@@ -916,6 +926,7 @@ StockQuoteDesklet.prototype = {
             logDebug("YF query response: " + response);
             let parsedResponse = JSON.parse(response);
             _lastResponses.set(_that.id, {
+                symbolsArgument: quoteSymbolsArg,
                 responseResult: parsedResponse.quoteResponse.result,
                 responseError: parsedResponse.quoteResponse.error,
                 lastUpdated: new Date()
@@ -1012,6 +1023,7 @@ StockQuoteDesklet.prototype = {
         logDebug("processFailedFetch");
         const errorResponse = JSON.parse(this.quoteReader.buildErrorResponse(errorMessage));
         _lastResponses.set(this.id, {
+            symbolsArgument: "",
             responseResult: errorResponse.quoteResponse.result,
             responseError: errorResponse.quoteResponse.error,
             lastUpdated: new Date()
@@ -1037,6 +1049,12 @@ StockQuoteDesklet.prototype = {
         if (_lastResponses.has(this.id)) {
             logDebug("last response exists for id " + this.id);
             existingId = this.id;
+        }
+
+        if (!this.quoteUtils.compareSymbolsArgument(_lastResponses.get(existingId).symbolsArgument, this.quoteSymbolsText)) {
+            logDebug("Detected changed quotes list, refreshing data for desklet id " + this.id);
+            this.onQuotesListChanged();
+            return;
         }
 
         let responseResult = _lastResponses.get(existingId).responseResult;
