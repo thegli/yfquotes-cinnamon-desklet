@@ -250,6 +250,7 @@ YahooFinanceQuoteReader.prototype = {
     quoteUtils: new YahooFinanceQuoteUtils(),
 
     getCookie: function(customUserAgent, callback) {
+        logDebug("getCookie");
         const _that = this;
         const message = Soup.Message.new("GET", YF_COOKIE_URL);
 
@@ -298,6 +299,7 @@ YahooFinanceQuoteReader.prototype = {
     },
 
     postConsent: function(customUserAgent, formData, callback) {
+        logDebug("postConsent");
         const _that = this;
         const message = Soup.Message.new("POST", YF_CONSENT_URL);
 
@@ -347,6 +349,7 @@ YahooFinanceQuoteReader.prototype = {
     },
 
     getCrumb: function(customUserAgent, callback) {
+        logDebug("getCrumb");
         const _that = this;
         const message = Soup.Message.new("GET", YF_CRUMB_URL);
 
@@ -395,6 +398,7 @@ YahooFinanceQuoteReader.prototype = {
     },
 
     getFinanceData: function(quoteSymbolsArg, customUserAgent, callback) {
+        logDebug("getFinanceData");
         const _that = this;
 
         if (quoteSymbolsArg.length === 0) {
@@ -867,17 +871,19 @@ StockQuoteDesklet.prototype = {
 
     // called on events that change the quotes data layout (sorting, show/hide fields, text color, etc)
     onRenderSettingsChanged: function() {
+        logDebug("onRenderSettingsChanged");
         this.render();
     },
 
     // called on events that change the way YFQ data are fetched (data refresh interval)
     onDataFetchSettingsChanged: function() {
+        logDebug("onDataFetchSettingsChanged");
         this.removeUpdateTimer();
         this.setUpdateTimer();
     },
 
     // called on events that change the quotes data (quotes list)
-    // BEWARE: DO NOT use this function as callback in settings.bindProperty() - otherwise multiple YFQ requests are fired, and multiple timers are created!
+    // BEWARE: DO NOT use this function as callback in settings.bind() - otherwise multiple YFQ requests are fired, and multiple timers are created!
     onQuotesListChanged: function() {
         logDebug("onQuotesListChanged");
 
@@ -903,6 +909,7 @@ StockQuoteDesklet.prototype = {
     },
 
     fetchFinanceDataAndRender: function(quoteSymbolsArg, customUserAgent) {
+        logDebug("fetchFinanceDataAndRender. quotes=" + quoteSymbolsArg + ", custom User-Agent: " + customUserAgent);
         const _that = this;
 
         this.quoteReader.getFinanceData(quoteSymbolsArg, customUserAgent, function(response) {
@@ -922,6 +929,7 @@ StockQuoteDesklet.prototype = {
         for (let cookie of _cookieJar.all_cookies()) {
             let cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
             if (cookieName === name) {
+                logDebug("Cookie found in jar: " + name);
                 return true;
             }
         }
@@ -930,6 +938,7 @@ StockQuoteDesklet.prototype = {
     },
 
     fetchCookieAndRender: function(quoteSymbolsArg, customUserAgent) {
+        logDebug("fetchCookieAndRender, custom User-Agent: " + customUserAgent);
         const _that = this;
 
         this.quoteReader.getCookie(customUserAgent, function(authResponseMessage, responseBody) {
@@ -946,6 +955,7 @@ StockQuoteDesklet.prototype = {
     },
 
     processConsentAndRender: function(authResponseMessage, consentPage, quoteSymbolsArg, customUserAgent) {
+        logDebug("processConsentAndRender");
         const _that = this;
         const formElementRegex = /(<form method="post")(.*)(action="">)/;
         const formInputRegex = /(<input type="hidden" name=")(.*?)(" value=")(.*?)(">)/g;
@@ -975,6 +985,7 @@ StockQuoteDesklet.prototype = {
     },
 
     fetchCrumbAndRender: function(quoteSymbolsArg, customUserAgent) {
+        logDebug("fetchCrumbAndRender");
         const _that = this;
 
         this.quoteReader.getCrumb(customUserAgent, function(crumbResponseMessage, responseBody) {
@@ -998,6 +1009,7 @@ StockQuoteDesklet.prototype = {
     },
 
     processFailedFetch: function(errorMessage) {
+        logDebug("processFailedFetch");
         const errorResponse = JSON.parse(this.quoteReader.buildErrorResponse(errorMessage));
         _lastResponses.set(this.id, {
             responseResult: errorResponse.quoteResponse.result,
@@ -1021,11 +1033,11 @@ StockQuoteDesklet.prototype = {
     render: function() {
         logDebug("render");
         let existingId = "default";
+        logDebug("_lastResponses size: " + _lastResponses.size);
         if (_lastResponses.has(this.id)) {
             logDebug("last response exists for id " + this.id);
             existingId = this.id;
         }
-        logDebug("_lastResponses size: " + _lastResponses.size);
 
         let responseResult = _lastResponses.get(existingId).responseResult;
         const responseError = _lastResponses.get(existingId).responseError;
