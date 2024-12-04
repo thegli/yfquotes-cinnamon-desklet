@@ -229,7 +229,7 @@ YahooFinanceQuoteUtils.prototype = {
         } else if (useLongName && this.existsProperty(quote, "longName")) {
             displayName = quote.longName;
         } else if (this.existsProperty(quote, "shortName")) {
-            displayName = quote.shortName;
+            displayName = quote.shortName.split("    ")[0];
         }
 
         quote.displayName = displayName;
