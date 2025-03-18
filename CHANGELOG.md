@@ -2,7 +2,12 @@
 
 Features:
 
+- improve display of error details
 - replace Mainloop with GLib for timer functionality
+
+Bugfixes:
+
+- fix "TypeError: responseResult is null"
 
 ### 0.15.4 - February 10, 2025
 
