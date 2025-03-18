@@ -1,3 +1,9 @@
+### 0.15.5 - March 18, 2025
+
+Features:
+
+- replace Mainloop with GLib for timer functionality
+
 ### 0.15.4 - February 10, 2025
 
 Bugfixes:

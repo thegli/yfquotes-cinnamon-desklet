@@ -18,8 +18,6 @@ const GLib = imports.gi.GLib;
 const Gtk = imports.gi.Gtk;
 const Soup = imports.gi.Soup;
 const ByteArray = imports.byteArray;
-// for periodic data reload
-const Mainloop = imports.mainloop;
 // Binding desklet to mainloop function
 const Lang = imports.lang;
 // Settings loader based on settings-schema.json file
@@ -1057,7 +1055,7 @@ StockQuoteDesklet.prototype = {
                 logDebug("add instant timer");
                 delaySeconds = 1;
             }
-            this.updateId = Mainloop.timeout_add_seconds(delaySeconds, Lang.bind(this, this.onQuotesListChanged));
+            this.updateId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, delaySeconds, () => {this.onQuotesListChanged()});
             logDebug("new updateId " + this.updateId);
             this.updateInProgress = false;
         }
@@ -1164,7 +1162,7 @@ StockQuoteDesklet.prototype = {
     removeUpdateTimer: function() {
         logDebug("removeUpdateTimer for updateId " + this.updateId);
         if (this.updateId > 0) {
-            Mainloop.source_remove(this.updateId);
+            GLib.source_remove(this.updateId);
         }
         this.updateId = 0;
         this.updateInProgress = true;
