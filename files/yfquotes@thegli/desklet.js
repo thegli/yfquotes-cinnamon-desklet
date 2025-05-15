@@ -1168,15 +1168,21 @@ StockQuoteDesklet.prototype = {
 
         this.quoteReader.getFinanceData(quoteSymbolsArg, networkSettings, function(response, instantTimer = false) {
             _that.quoteUtils.logDebug("YF query response: " + response);
-            let parsedResponse = JSON.parse(response);
-            _lastResponses.set(_that.id, {
-                symbolsArgument: quoteSymbolsArg,
-                responseResult: parsedResponse.quoteResponse.result,
-                responseError: parsedResponse.quoteResponse.error,
-                lastUpdated: new Date()
-            });
-            _that.setUpdateTimer(instantTimer);
-            _that.render();
+            try {
+                let parsedResponse = JSON.parse(response);
+                _lastResponses.set(_that.id, {
+                    symbolsArgument: quoteSymbolsArg,
+                    responseResult: parsedResponse.quoteResponse.result,
+                    responseError: parsedResponse.quoteResponse.error,
+                    lastUpdated: new Date()
+                });
+                _that.setUpdateTimer(instantTimer);
+                _that.render();
+            } catch (e) {
+                _that.quoteUtils.logError("Query response is not valid JSON: " + e);
+                // set current quotes list to pass check that quotes list has not changed in render()
+                _that.processFailedFetch(e, quoteSymbolsArg);
+            }
         });
     },
 
@@ -1263,11 +1269,11 @@ StockQuoteDesklet.prototype = {
         return this.authAttempts < MAX_AUTH_ATTEMPTS;
     },
 
-    processFailedFetch: function(errorMessage) {
+    processFailedFetch: function(errorMessage, symbolsArg = "") {
         this.quoteUtils.logDebug("processFailedFetch, errorMessage: " + errorMessage);
         const errorResponse = JSON.parse(this.quoteReader.buildErrorResponse(errorMessage));
         _lastResponses.set(this.id, {
-            symbolsArgument: "",
+            symbolsArgument: symbolsArg,
             responseResult: errorResponse.quoteResponse.result,
             responseError: errorResponse.quoteResponse.error,
             lastUpdated: new Date()
