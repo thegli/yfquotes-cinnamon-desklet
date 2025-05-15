@@ -29,7 +29,13 @@ const Util = imports.misc.util;
 
 const UUID = "yfquotes@thegli";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
+const LOG_DEBUG = Gio.file_new_for_path(DESKLET_DIR + "/DEBUG").query_exists(null);
 const IS_SOUP_2 = Soup.MAJOR_VERSION === 2;
+
+if (LOG_DEBUG) {
+    global.log(UUID + " " + "Debug log is enabled");
+    global.log(UUID + " libsoup version " + Soup.MAJOR_VERSION + "." + Soup.MINOR_VERSION + "." + Soup.MICRO_VERSION);
+}
 
 const YF_COOKIE_URL = "https://finance.yahoo.com/quote/%5EGSPC/options";
 const YF_CONSENT_URL = "https://consent.yahoo.com/v2/collectConsent";
@@ -77,7 +83,6 @@ const CURL_CIPHERS_VALUE =
 const ABSENT = "N/A";
 const ERROR_RESPONSE_BEGIN = "{\"quoteResponse\":{\"result\":[],\"error\":\"";
 const ERROR_RESPONSE_END = "\"}}";
-const LOG_DEBUG = Gio.file_new_for_path(DESKLET_DIR + "/DEBUG").query_exists(null);
 const MAX_AUTH_ATTEMPTS = 3;
 
 const BASE_FONT_SIZE = 10;
@@ -87,27 +92,6 @@ Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
 function _(str) {
     return Gettext.dgettext(UUID, str);
 }
-
-let _httpSession;
-if (IS_SOUP_2) {
-    _httpSession = new Soup.SessionAsync();
-    Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ProxyResolverDefault());
-    Soup.Session.prototype.add_feature.call(_httpSession, new Soup.ContentDecoder());
-} else { // assume version 3
-    //logDebug("Soup3 Version " + Soup.MAJOR_VERSION + "." + Soup.MINOR_VERSION + "." + Soup.MICRO_VERSION);
-    _httpSession = new Soup.Session();
-}
-_httpSession.timeout = 10;
-_httpSession.idle_timeout = 10;
-
-// share cookies and gathered auth parameters with all desklet instances
-const _cookieJar = new Soup.CookieJar();
-Soup.Session.prototype.add_feature.call(_httpSession, _cookieJar);
-
-const _authParams = {
-    cookie: null,
-    crumb: null
-};
 
 // cache the last QF quotes response
 const _lastResponses = new Map();
@@ -298,39 +282,6 @@ YahooFinanceQuoteUtils.prototype = {
             return ((p1 < p2) ? -1 : ((p1 > p2) ? 1 : 0)) * direction;
         });
         return clone;
-    },
-
-    getCookieFromJar: function(name) {
-        for (let cookie of _cookieJar.all_cookies()) {
-            let cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
-            if (cookieName === name) {
-                const cookieValue = IS_SOUP_2 ? cookie.value : cookie.get_value();
-                this.logDebug("Cookie " + name + " found in jar, value=" + cookieValue);
-                return cookie;
-            }
-        }
-
-        this.logDebug("No cookie found with name " + name);
-        return null;
-    },
-
-    existsCookieInJar: function(name) {
-        return (this.getCookieFromJar(name) !== null);
-    },
-
-    deleteAllCookies: function() {
-        for (let cookie of _cookieJar.all_cookies()) {
-            const cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
-            _cookieJar.delete_cookie(cookie);
-            this.logDebug("Cookie " + cookieName + " deleted from jar");
-        }
-        this.logDebug("All cookies deleted from jar");
-    },
-
-    dropAuthParams: function() {
-        this.deleteAllCookies();
-        _authParams.cookie = null;
-        _authParams.crumb = null;
     }
 };
 
@@ -343,6 +294,69 @@ YahooFinanceQuoteReader.prototype = {
     init: function(id) {
         this.id = id;
         this.quoteUtils = new YahooFinanceQuoteUtils(id);
+
+        let httpSession;
+        if (IS_SOUP_2) {
+            httpSession = new Soup.SessionAsync();
+            Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
+            Soup.Session.prototype.add_feature.call(httpSession, new Soup.ContentDecoder());
+        } else { // assume version 3
+            httpSession = new Soup.Session();
+        }
+        httpSession.timeout = 10;
+        httpSession.idle_timeout = 10;
+
+        const cookieJar = new Soup.CookieJar();
+        Soup.Session.prototype.add_feature.call(httpSession, cookieJar);
+
+        this.httpSession = httpSession;
+        this.cookieJar = cookieJar;
+        this.authParams = {
+            cookie: null,
+            crumb: null
+        };
+    },
+
+    setCrumb: function(crumb) {
+        this.authParams.crumb = crumb;
+    },
+
+    hasCrumb: function() {
+        return this.authParams.crumb !== null;
+    },
+
+    getCookieFromJar: function(name) {
+        for (let cookie of this.cookieJar.all_cookies()) {
+            let cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
+            if (cookieName === name) {
+                const cookieValue = IS_SOUP_2 ? cookie.value : cookie.get_value();
+                this.quoteUtils.logDebug("Cookie " + name + " found in jar, value: " + cookieValue);
+                return cookie;
+            }
+        }
+
+        this.quoteUtils.logDebug("No cookie found with name: " + name);
+        return null;
+    },
+
+    existsCookieInJar: function(name) {
+        return (this.getCookieFromJar(name) !== null);
+    },
+
+    deleteAllCookies: function() {
+        this.quoteUtils.logDebug("deleteAllCookies")
+        for (let cookie of this.cookieJar.all_cookies()) {
+            const cookieName = IS_SOUP_2 ? cookie.name : cookie.get_name();
+            this.cookieJar.delete_cookie(cookie);
+            this.quoteUtils.logDebug("Cookie deleted from jar: " + cookieName);
+        }
+        this.quoteUtils.logDebug("All cookies deleted from jar");
+    },
+
+    dropAuthParams: function() {
+        this.deleteAllCookies();
+        this.authParams.cookie = null;
+        this.authParams.crumb = null;
     },
 
     getCookie: function(networkSettings, callback) {
@@ -358,7 +372,7 @@ YahooFinanceQuoteReader.prototype = {
                 message.request_headers.append(USER_AGENT_HEADER, customUserAgent);
             }
 
-            _httpSession.queue_message(message, function(session, message) {
+            this.httpSession.queue_message(message, function(session, message) {
                 _that.quoteUtils.logDebug("Soup2 Cookie response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                 if (_that.quoteUtils.isOkStatus(message)) {
                     try {
@@ -378,7 +392,7 @@ YahooFinanceQuoteReader.prototype = {
                 message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
             }
 
-            _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
+            this.httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
                 _that.quoteUtils.logDebug("Soup3 Cookie response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                 if (_that.quoteUtils.isOkStatus(message)) {
                     try {
@@ -409,7 +423,7 @@ YahooFinanceQuoteReader.prototype = {
             }
             message.set_request(FORM_URLENCODED_VALUE, Soup.MemoryUse.COPY, formData);
 
-            _httpSession.queue_message(message, function(session, message) {
+            this.httpSession.queue_message(message, function(session, message) {
                 _that.quoteUtils.logDebug("Soup2 Consent response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                 if (_that.quoteUtils.isOkStatus(message)) {
                     try {
@@ -430,7 +444,7 @@ YahooFinanceQuoteReader.prototype = {
             }
             message.set_request_body_from_bytes(FORM_URLENCODED_VALUE, GLib.Bytes.new(formData));
 
-            _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
+            this.httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
                 _that.quoteUtils.logDebug("Soup3 Consent response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                 if (_that.quoteUtils.isOkStatus(message)) {
                     try {
@@ -454,16 +468,17 @@ YahooFinanceQuoteReader.prototype = {
         if (networkSettings.enableCurl) {
             this.quoteUtils.logDebug("Use curl for getCrumb");
 
-            const authCookie = this.quoteUtils.getCookieFromJar(AUTH_COOKIE);
+            const authCookie = this.getCookieFromJar(AUTH_COOKIE);
+
             if (authCookie) {
                 // keep authorization cookie
                 const authCookieValue = IS_SOUP_2 ? authCookie.value : authCookie.get_value();
-                _authParams.cookie = AUTH_COOKIE + "=" + authCookieValue;
+                this.authParams.cookie = AUTH_COOKIE + "=" + authCookieValue;
 
                 const curlArgs = [
                     networkSettings.curlCommand,
                     CURL_CIPHERS_OPTION, CURL_CIPHERS_VALUE,
-                    CURL_HEADER_OPTION, CURL_COOKIE_HEADER_NAME + _authParams.cookie
+                    CURL_HEADER_OPTION, CURL_COOKIE_HEADER_NAME + this.authParams.cookie
                 ];
                 if (customUserAgent) {
                     curlArgs.push(CURL_HEADER_OPTION, CURL_USER_AGENT_HEADER_NAME + customUserAgent);
@@ -477,7 +492,7 @@ YahooFinanceQuoteReader.prototype = {
                         callback.call(_that, null, response);
                     });
                 } catch (e) {
-                    this.quoteUtils.logWarning("caught exception on curl execution! e=" + e);
+                    this.quoteUtils.logWarning("caught exception on curl execution! " + e);
                     callback.call(_that, null, null);
                 }
             } else {
@@ -496,7 +511,7 @@ YahooFinanceQuoteReader.prototype = {
                     message.request_headers.append(USER_AGENT_HEADER, customUserAgent);
                 }
 
-                _httpSession.queue_message(message, function(session, message) {
+                this.httpSession.queue_message(message, function(session, message) {
                     _that.quoteUtils.logDebug("Soup2 Crumb response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                     if (_that.quoteUtils.isOkStatus(message)) {
                         try {
@@ -516,7 +531,7 @@ YahooFinanceQuoteReader.prototype = {
                     message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
                 }
 
-                _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
+                this.httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
                     _that.quoteUtils.logDebug("Soup3 Crumb response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                     if (_that.quoteUtils.isOkStatus(message)) {
                         try {
@@ -543,7 +558,7 @@ YahooFinanceQuoteReader.prototype = {
             return;
         }
 
-        const requestUrl = this.createYahooQueryUrl(quoteSymbolsArg, _authParams.crumb);
+        const requestUrl = this.createYahooQueryUrl(quoteSymbolsArg, this.authParams.crumb);
         const customUserAgent = networkSettings.customUserAgent;
 
         if (networkSettings.enableCurl) {
@@ -551,10 +566,10 @@ YahooFinanceQuoteReader.prototype = {
 
             const curlArgs = [networkSettings.curlCommand,
                 CURL_CIPHERS_OPTION, CURL_CIPHERS_VALUE,
-                CURL_HEADER_OPTION, CURL_COOKIE_HEADER_NAME + _authParams.cookie,
+                CURL_HEADER_OPTION, CURL_COOKIE_HEADER_NAME + this.authParams.cookie,
             ]
             if (customUserAgent) {
-                curlArgs.push(CURL_HEADER_OPTION, CURL_USER_AGENT_HEADER_NAME + "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0");
+                curlArgs.push(CURL_HEADER_OPTION, CURL_USER_AGENT_HEADER_NAME + customUserAgent);
             }
             curlArgs.push(requestUrl);
 
@@ -572,7 +587,7 @@ YahooFinanceQuoteReader.prototype = {
                     message.request_headers.append(USER_AGENT_HEADER, customUserAgent);
                 }
 
-                _httpSession.queue_message(message, function(session, message) {
+                this.httpSession.queue_message(message, function(session, message) {
                     _that.quoteUtils.logDebug("Soup2 Quotes response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                     if (_that.quoteUtils.isOkStatus(message)) {
                         try {
@@ -582,7 +597,7 @@ YahooFinanceQuoteReader.prototype = {
                         }
                     } else if (_that.quoteUtils.isUnauthorizedStatus(message)) {
                         _that.quoteUtils.logDebug("Current authorization parameters have expired. Discarding them.");
-                        _that.quoteUtils.dropAuthParams();
+                        _that.dropAuthParams();
                         callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true);
                     } else {
                         _that.quoteUtils.logWarning("Error retrieving url " + requestUrl + ". Status: " + _that.quoteUtils.getMessageStatusInfo(message));
@@ -594,7 +609,7 @@ YahooFinanceQuoteReader.prototype = {
                     message.get_request_headers().append(USER_AGENT_HEADER, customUserAgent);
                 }
 
-                _httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
+                this.httpSession.send_and_read_async(message, Soup.MessagePriority.NORMAL, null, function(session, result) {
                     _that.quoteUtils.logDebug("Soup3 Quotes response status: " + _that.quoteUtils.getMessageStatusInfo(message));
                     if (_that.quoteUtils.isOkStatus(message)) {
                         try {
@@ -605,7 +620,7 @@ YahooFinanceQuoteReader.prototype = {
                         }
                     } else if (_that.quoteUtils.isUnauthorizedStatus(message)) {
                         _that.quoteUtils.logDebug("Current authorization parameters have expired. Discarding them.");
-                        _that.quoteUtils.dropAuthParams();
+                        _that.dropAuthParams();
                         callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true);
                     } else {
                         _that.quoteUtils.logWarning("Error retrieving url " + requestUrl + ". Status: " + _that.quoteUtils.getMessageStatusInfo(message));
@@ -676,7 +691,6 @@ QuotesTable.prototype = {
     },
 
     renderTable: function(quotes, symbolCustomizationMap, settings) {
-        this.quoteUtils.logInfo("=========> render table ==================");
         for (let rowIndex = 0, l = quotes.length; rowIndex < l; rowIndex++) {
             this.renderTableRow(quotes[rowIndex], symbolCustomizationMap, settings, rowIndex);
         }
@@ -909,7 +923,7 @@ StockQuoteDesklet.prototype = {
 
     init: function(metadata, id) {
         this.quoteUtils = new YahooFinanceQuoteUtils(id);
-        this.quoteUtils.logDebug("init desklet id " + id);
+        this.quoteUtils.logDebug("init desklet, id: " + id);
         this.metadata = metadata;
         this.id = id;
         this.updateId = 0;
@@ -1111,9 +1125,11 @@ StockQuoteDesklet.prototype = {
 
         // reset auth state
         this.authAttempts = 0;
-        this.quoteUtils.dropAuthParams();
+        this.quoteReader.dropAuthParams();
         this.quoteUtils.logInfo("Dropped all autborization parameters");
-        this.onQuotesListChanged();
+
+        this.removeUpdateTimer();
+        this.setUpdateTimer(true);
     },
 
     // called on events that change the quotes data (quotes list)
@@ -1122,7 +1138,7 @@ StockQuoteDesklet.prototype = {
         this.quoteUtils.logDebug("onQuotesListChanged");
 
         if (this.updateInProgress) {
-            this.quoteUtils.logDebug("Data refresh in progress for desklet id " + this.id);
+            this.quoteUtils.logDebug("Data refresh in progress");
             return;
         }
         this.removeUpdateTimer();
@@ -1131,15 +1147,14 @@ StockQuoteDesklet.prototype = {
         const networkSettings = this.getNetworkSettings();
 
         try {
-            if (_authParams.crumb) {
-                this.quoteUtils.logWarning("this instance has  crumb: " + _authParams.crumb);
+            if (this.quoteReader.hasCrumb()) {
                 this.fetchFinanceDataAndRender(quoteSymbolsArg, networkSettings);
             } else if (this.hasRemainingAuthAttempts()) {
                 this.fetchCookieAndRender(quoteSymbolsArg, networkSettings);
             } else {
                 // else give up on authorization and clear all
                 this.quoteUtils.logDebug("No more auth attempts left, dropping all auth params");
-                this.quoteUtils.dropAuthParams();
+                this.quoteReader.dropAuthParams();
             }
         } catch (err) {
             this.quoteUtils.logError("Cannot fetch quotes information for symbol %s due to error: %s".format(quoteSymbolsArg, err));
@@ -1148,7 +1163,7 @@ StockQuoteDesklet.prototype = {
     },
 
     fetchFinanceDataAndRender: function(quoteSymbolsArg, networkSettings) {
-        this.quoteUtils.logDebug("fetchFinanceDataAndRender. quotes=" + quoteSymbolsArg + ", network settings=" + Object.entries(networkSettings));
+        this.quoteUtils.logDebug("fetchFinanceDataAndRender. quotes: " + quoteSymbolsArg + ", network settings: " + Object.entries(networkSettings));
         const _that = this;
 
         this.quoteReader.getFinanceData(quoteSymbolsArg, networkSettings, function(response, instantTimer = false) {
@@ -1166,14 +1181,14 @@ StockQuoteDesklet.prototype = {
     },
 
     fetchCookieAndRender: function(quoteSymbolsArg, networkSettings) {
-        this.quoteUtils.logDebug("fetchCookieAndRender. quotes=" + quoteSymbolsArg + ", network settings=" + Object.entries(networkSettings));
+        this.quoteUtils.logDebug("fetchCookieAndRender. quotes: " + quoteSymbolsArg + ", network settings: " + Object.entries(networkSettings));
         const _that = this;
 
         this.quoteReader.getCookie(networkSettings, function(authResponseMessage, responseBody) {
             _that.quoteUtils.logDebug("Cookie response body: " + responseBody);
-            if (_that.quoteUtils.existsCookieInJar(AUTH_COOKIE)) {
+            if (_that.quoteReader.existsCookieInJar(AUTH_COOKIE)) {
                 _that.fetchCrumbAndRender(quoteSymbolsArg, networkSettings);
-            } else if (_that.quoteUtils.existsCookieInJar(CONSENT_COOKIE)) {
+            } else if (_that.quoteReader.existsCookieInJar(CONSENT_COOKIE)) {
                 _that.processConsentAndRender(authResponseMessage, responseBody, quoteSymbolsArg, networkSettings);
             } else {
                 _that.quoteUtils.logWarning("Failed to retrieve auth cookie!");
@@ -1200,7 +1215,7 @@ StockQuoteDesklet.prototype = {
             consentFormFields += "reject=reject";
 
             this.quoteReader.postConsent(networkSettings, consentFormFields, function(consentResponseMessage) {
-                if (_that.quoteUtils.existsCookieInJar(AUTH_COOKIE)) {
+                if (_that.quoteReader.existsCookieInJar(AUTH_COOKIE)) {
                     _that.fetchCrumbAndRender(quoteSymbolsArg, networkSettings);
                 } else {
                     _that.quoteUtils.logWarning("Failed to retrieve auth cookie from consent form");
@@ -1227,13 +1242,13 @@ StockQuoteDesklet.prototype = {
             this.quoteUtils.logDebug("Crumb response body: " + responseBody);
             if (responseBody) {
                 if (typeof responseBody.data === "string" && responseBody.data.trim() !== "" && !/\s/.test(responseBody.data)) {
-                    _authParams.crumb = responseBody.data;
+                    _that.quoteReader.setCrumb(responseBody.data);
                 } else if (typeof responseBody === "string" && responseBody.trim() !== "" && !/\s/.test(responseBody)) {
-                    _authParams.crumb = responseBody;
+                    _that.quoteReader.setCrumb(responseBody);
                 }
             }
 
-            if (_authParams.crumb) {
+            if (_that.quoteReader.hasCrumb()) {
                 _that.quoteUtils.logInfo("Successfully retrieved all authorization parameters");
                 _that.fetchFinanceDataAndRender(quoteSymbolsArg, networkSettings);
             } else {
@@ -1249,7 +1264,7 @@ StockQuoteDesklet.prototype = {
     },
 
     processFailedFetch: function(errorMessage) {
-        this.quoteUtils.logDebug("processFailedFetch");
+        this.quoteUtils.logDebug("processFailedFetch, errorMessage: " + errorMessage);
         const errorResponse = JSON.parse(this.quoteReader.buildErrorResponse(errorMessage));
         _lastResponses.set(this.id, {
             symbolsArgument: "",
@@ -1262,7 +1277,7 @@ StockQuoteDesklet.prototype = {
     },
 
     setUpdateTimer: function(instantTimer = false) {
-        this.quoteUtils.logDebug("setUpdateTimer, instantTimer=" + instantTimer);
+        this.quoteUtils.logDebug("setUpdateTimer, instantTimer: " + instantTimer);
         if (this.updateInProgress) {
             let delaySeconds = this.delayMinutes * 60;
             if (instantTimer) {
@@ -1270,7 +1285,7 @@ StockQuoteDesklet.prototype = {
                 delaySeconds = 1;
             }
             this.updateId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, delaySeconds, () => { this.onQuotesListChanged() });
-            this.quoteUtils.logDebug("new updateId " + this.updateId);
+            this.quoteUtils.logDebug("Started new timer, updateId: " + this.updateId);
             this.updateInProgress = false;
         }
     },
@@ -1281,14 +1296,14 @@ StockQuoteDesklet.prototype = {
         let existingId = "default";
         this.quoteUtils.logDebug("_lastResponses size: " + _lastResponses.size);
         if (_lastResponses.has(this.id)) {
-            this.quoteUtils.logDebug("last response exists for id " + this.id);
+            this.quoteUtils.logDebug("last response exists");
             existingId = this.id;
         }
 
         // check if quotes list was changed but no call of onQuotesListChanged() occurred, e.g. on layout changes
         if (this.hasRemainingAuthAttempts() &&
             !this.quoteUtils.compareSymbolsArgument(_lastResponses.get(existingId).symbolsArgument, this.quoteSymbolsText)) {
-            this.quoteUtils.logDebug("Detected changed quotes list, refreshing data for desklet id " + this.id);
+            this.quoteUtils.logDebug("Detected changed quotes list, refreshing data");
             this.onQuotesListChanged();
             return;
         }
@@ -1360,10 +1375,10 @@ StockQuoteDesklet.prototype = {
     },
 
     on_desklet_removed: function() {
-        this.quoteUtils.logDebug("on_desklet_removed for id " + this.id);
+        this.quoteUtils.logDebug("on_desklet_removed");
         this.removeUpdateTimer();
         this.unrender();
-        // remove cached response
+        // remove cached response for this instance
         _lastResponses.delete(this.id);
     },
 
@@ -1376,7 +1391,7 @@ StockQuoteDesklet.prototype = {
     },
 
     removeUpdateTimer: function() {
-        this.quoteUtils.logDebug("removeUpdateTimer for updateId " + this.updateId);
+        this.quoteUtils.logDebug("removeUpdateTimer, updateId: " + this.updateId);
         if (this.updateId > 0) {
             GLib.source_remove(this.updateId);
         }

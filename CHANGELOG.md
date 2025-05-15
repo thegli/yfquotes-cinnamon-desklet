@@ -1,3 +1,10 @@
+### 0.16.2 - July 16, 2025
+
+Features:
+
+- manage separate authorization parameters for each desklet instance
+- improve debug logs
+
 ### 0.16.1 - July 3, 2025
 
 Features:
