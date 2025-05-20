@@ -53,6 +53,10 @@ const FORM_URLENCODED_VALUE = "application/x-www-form-urlencoded";
 const AUTH_COOKIE = "A1";
 const CONSENT_COOKIE = "GUCS";
 
+const CURL_RESPONSE_CODE_PREFIX = "HTTP_CODE=";
+const CURL_SILENT_LOCATION_OPTIONS = "-sSL";
+const CURL_WRITE_OUT_OPTION = "-w";
+const CURL_WRITE_OUT_VALUE = CURL_RESPONSE_CODE_PREFIX + "%{http_code}";
 const CURL_HEADER_OPTION = "-H";
 const CURL_COOKIE_HEADER_NAME = "Cookie: ";
 const CURL_USER_AGENT_HEADER_NAME = "User-Agent: ";
@@ -103,6 +107,46 @@ _lastResponses.set("default", {
     lastUpdated: new Date()
 });
 
+
+function CurlMessage(response) {
+    this.init(response);
+};
+
+// mimics SoupMessage
+CurlMessage.prototype = {
+
+    init: function(response) {
+        const responseParts = response.split(CURL_RESPONSE_CODE_PREFIX);
+        this.response_body = responseParts[0];
+        this.status_code = responseParts[1];
+        this.reason_phrase = this.determineReasonPhrase(this.status_code);
+    },
+
+    determineReasonPhrase: function(statusCode) {
+        switch (statusCode) {
+            case '200': return "OK";
+            case '400': return "Bad Request";
+            case '401': return "Unauthorized";
+            case '403': return "Forbidden";
+            case '404': return "Not Found";
+            case '422': return "Unprocessable Content";
+            case '429': return "Too Many Requests";
+            case '500': return "Internal Server Error";
+            case '502': return "Bad Gateway";
+            case '503': return "Service Unavailable";
+            case '504': return "Gateway Timeout";
+            default: return "Unknown reason";
+        }
+    },
+
+    get_reason_phrase: function() {
+        return this.reason_phrase;
+    },
+
+    get_status: function() {
+        return this.status_code;
+    }
+};
 
 function YahooFinanceQuoteUtils(id) {
     this.init(id);
@@ -477,6 +521,8 @@ YahooFinanceQuoteReader.prototype = {
 
                 const curlArgs = [
                     networkSettings.curlCommand,
+                    CURL_SILENT_LOCATION_OPTIONS,
+                    CURL_WRITE_OUT_OPTION, CURL_WRITE_OUT_VALUE,
                     CURL_CIPHERS_OPTION, CURL_CIPHERS_VALUE,
                     CURL_HEADER_OPTION, CURL_COOKIE_HEADER_NAME + this.authParams.cookie
                 ];
@@ -489,7 +535,17 @@ YahooFinanceQuoteReader.prototype = {
                 try {
                     Util.spawn_async(curlArgs, function(response) {
                         _that.quoteUtils.logDebug("Curl getCrump response: " + response);
-                        callback.call(_that, null, response);
+                        const curlMessage = new CurlMessage(response);
+                        if (_that.quoteUtils.isOkStatus(curlMessage)) {
+                            try {
+                                callback.call(_that, curlMessage, curlMessage.response_body);
+                            } catch (e) {
+                                _that.quoteUtils.logError(e);
+                            }
+                        } else {
+                            _that.quoteUtils.logWarning("Curl Error retrieving crumb! Status: " + _that.quoteUtils.getMessageStatusInfo(curlMessage));
+                            callback.call(_that, curlMessage, null);
+                        }
                     });
                 } catch (e) {
                     this.quoteUtils.logWarning("caught exception on curl execution! " + e);
@@ -501,7 +557,6 @@ YahooFinanceQuoteReader.prototype = {
             }
         } else {
             this.quoteUtils.logDebug("Use libsoup for getCrumb");
-
             const message = Soup.Message.new("GET", YF_CRUMB_URL);
 
             if (IS_SOUP_2) {
@@ -520,7 +575,7 @@ YahooFinanceQuoteReader.prototype = {
                             _that.quoteUtils.logError(e);
                         }
                     } else {
-                        _that.quoteUtils.logWarning("Error retrieving crumb! Status: " + _that.quoteUtils.getMessageStatusInfo(message));
+                        _that.quoteUtils.logWarning("Soup2 Error retrieving crumb! Status: " + _that.quoteUtils.getMessageStatusInfo(message));
                         callback.call(_that, message, null);
                     }
                 });
@@ -541,7 +596,7 @@ YahooFinanceQuoteReader.prototype = {
                             _that.quoteUtils.logError(e);
                         }
                     } else {
-                        _that.quoteUtils.logWarning("Error retrieving crumb! Status: " + _that.quoteUtils.getMessageStatusInfo(message));
+                        _that.quoteUtils.logWarning("Soup3 Error retrieving crumb! Status: " + _that.quoteUtils.getMessageStatusInfo(message));
                         callback.call(_that, message, null);
                     }
                 });
@@ -565,6 +620,8 @@ YahooFinanceQuoteReader.prototype = {
             this.quoteUtils.logDebug("Use curl for getFinanceData");
 
             const curlArgs = [networkSettings.curlCommand,
+                CURL_SILENT_LOCATION_OPTIONS,
+                CURL_WRITE_OUT_OPTION, CURL_WRITE_OUT_VALUE,
                 CURL_CIPHERS_OPTION, CURL_CIPHERS_VALUE,
                 CURL_HEADER_OPTION, CURL_COOKIE_HEADER_NAME + this.authParams.cookie,
             ]
@@ -576,7 +633,21 @@ YahooFinanceQuoteReader.prototype = {
             this.quoteUtils.logDebug("Curl getFinanceData arguments: " + curlArgs);
             Util.spawn_async(curlArgs, function(response) {
                 _that.quoteUtils.logDebug("Curl getFinanceData response: " + response);
-                callback.call(_that, response);
+                const curlMessage = new CurlMessage(response);
+                if (_that.quoteUtils.isOkStatus(curlMessage)) {
+                    try {
+                        callback.call(_that, curlMessage.response_body);
+                    } catch (e) {
+                        _that.quoteUtils.logError(e);
+                    }
+                } else if (_that.quoteUtils.isUnauthorizedStatus(curlMessage)) {
+                    _that.quoteUtils.logDebug("Curl Current authorization parameters have expired. Discarding them.");
+                    _that.dropAuthParams();
+                    callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true);
+                } else {
+                    _that.quoteUtils.logWarning("Curl Error retrieving url " + requestUrl + ". Status: " + _that.quoteUtils.getMessageStatusInfo(curlMessage));
+                    callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(curlMessage)));
+                }
             });
         } else {
             this.quoteUtils.logDebug("Use libsoup for getFinanceData");
@@ -1245,12 +1316,16 @@ StockQuoteDesklet.prototype = {
         }
 
         this.quoteReader.getCrumb(networkSettings, function(crumbResponseMessage, responseBody) {
-            this.quoteUtils.logDebug("Crumb response body: " + responseBody);
+            _that.quoteUtils.logDebug("Crumb response body: " + responseBody);
             if (responseBody) {
                 if (typeof responseBody.data === "string" && responseBody.data.trim() !== "" && !/\s/.test(responseBody.data)) {
+                    // libsoup2
                     _that.quoteReader.setCrumb(responseBody.data);
                 } else if (typeof responseBody === "string" && responseBody.trim() !== "" && !/\s/.test(responseBody)) {
+                    // libsoup3, curl
                     _that.quoteReader.setCrumb(responseBody);
+                } else {
+                    _that.quoteUtils.logWarning("Unhandled crumb response body: " + responseBody);
                 }
             }
 

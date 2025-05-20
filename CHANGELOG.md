@@ -1,8 +1,13 @@
+<<<<<<< Upstream, based on gitlab/main
 ### 0.16.2 - July 16, 2025
+=======
+### 0.16.1 - May 20, 2025
+>>>>>>> 5ab1b6b evaluate curl response for errors
 
 Features:
 
 - manage separate authorization parameters for each desklet instance
+- evaluate curl response for errors
 - improve debug logs
 
 ### 0.16.1 - July 3, 2025
