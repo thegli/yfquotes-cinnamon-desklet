@@ -1,3 +1,11 @@
+### 0.16.1 - tbd
+
+Features:
+
+- update Dutch translation (courtesy of [qadzek](https://github.com/qadzek))
+- update Hungarian translation (courtesy of [bossbob88](https://github.com/bossbob88))
+- update Spanish translation (courtesy of [haggen88](https://github.com/haggen88))
+
 ### 0.16.0 - May 11, 2025
 
 Features:
