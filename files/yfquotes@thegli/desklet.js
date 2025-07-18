@@ -31,7 +31,6 @@ const UUID = "yfquotes@thegli";
 const DESKLET_DIR = imports.ui.deskletManager.deskletMeta[UUID].path;
 const LOG_DEBUG = Gio.file_new_for_path(DESKLET_DIR + "/DEBUG").query_exists(null);
 const IS_SOUP_2 = Soup.MAJOR_VERSION === 2;
-
 if (LOG_DEBUG) {
     global.log(UUID + " " + "Debug log is enabled");
     global.log(UUID + " libsoup version " + Soup.MAJOR_VERSION + "." + Soup.MINOR_VERSION + "." + Soup.MICRO_VERSION);
@@ -97,22 +96,11 @@ function _(str) {
     return Gettext.dgettext(UUID, str);
 }
 
-// cache the last QF quotes response
-const _lastResponses = new Map();
-_lastResponses.set("default", {
-    symbolsArgument: "",
-    responseResult: [],
-    // we should never see this error message
-    responseError: _("No quotes data to display"),
-    lastUpdated: new Date()
-});
-
-
 function CurlMessage(response) {
     this.init(response);
 };
 
-// mimics SoupMessage
+// mimics libsoup's SoupMessage
 CurlMessage.prototype = {
 
     init: function(response) {
@@ -148,14 +136,14 @@ CurlMessage.prototype = {
     }
 };
 
-function YahooFinanceQuoteUtils(id) {
-    this.init(id);
+function YahooFinanceQuoteUtils(deskletId) {
+    this.init(deskletId);
 };
 
 YahooFinanceQuoteUtils.prototype = {
 
-    init: function(id) {
-        this.id = id;
+    init: function(deskletId) {
+        this.id = deskletId;
     },
 
     logDebug: function(msg) {
@@ -329,15 +317,15 @@ YahooFinanceQuoteUtils.prototype = {
     }
 };
 
-function YahooFinanceQuoteReader(id) {
-    this.init(id);
+function YahooFinanceQuoteReader(deskletId) {
+    this.init(deskletId);
 };
 
 YahooFinanceQuoteReader.prototype = {
 
-    init: function(id) {
-        this.id = id;
-        this.quoteUtils = new YahooFinanceQuoteUtils(id);
+    init: function(deskletId) {
+        this.id = deskletId;
+        this.quoteUtils = new YahooFinanceQuoteUtils(deskletId);
 
         let httpSession;
         if (IS_SOUP_2) {
@@ -713,15 +701,14 @@ YahooFinanceQuoteReader.prototype = {
     }
 };
 
-function QuotesTable(id) {
-    this.init(id);
+function QuotesTable(deskletId) {
+    this.init(deskletId);
 };
 
 QuotesTable.prototype = {
 
-    init: function(id) {
-        this.id = id;
-        this.quoteUtils = new YahooFinanceQuoteUtils(id);
+    init: function(deskletId) {
+        this.quoteUtils = new YahooFinanceQuoteUtils(deskletId);
         this.el = new St.Table({
             homogeneous: false
         });
@@ -984,23 +971,32 @@ QuotesTable.prototype = {
     }
 };
 
-function StockQuoteDesklet(metadata, id) {
-    Desklet.Desklet.prototype._init.call(this, metadata, id);
-    this.init(metadata, id);
+function StockQuoteDesklet(metadata, deskletId) {
+    this.init(metadata, deskletId);
 }
 
 StockQuoteDesklet.prototype = {
     __proto__: Desklet.Desklet.prototype,
 
-    init: function(metadata, id) {
-        this.quoteUtils = new YahooFinanceQuoteUtils(id);
-        this.quoteUtils.logDebug("init desklet, id: " + id);
+    init: function(metadata, deskletId) {
+        Desklet.Desklet.prototype._init.call(this, metadata, deskletId);
+
+        this.quoteUtils = new YahooFinanceQuoteUtils(deskletId);
+        this.quoteUtils.logDebug("init desklet, id: " + deskletId);
         this.metadata = metadata;
-        this.id = id;
+        this.id = deskletId;
         this.updateId = 0;
         this.updateInProgress = false;
         this.authAttempts = 0;
-        this.quoteReader = new YahooFinanceQuoteReader(id);
+        this.quoteReader = new YahooFinanceQuoteReader(deskletId);
+        // cache the last quotes response
+        this.lastResponse = {
+            symbolsArgument: "",
+            responseResult: [],
+            // we should never see this error message
+            responseError: _("No quotes data to display"),
+            lastUpdated: new Date()
+        };
 
         this.loadSettings();
         this.onQuotesListChanged();
@@ -1208,6 +1204,7 @@ StockQuoteDesklet.prototype = {
     onQuotesListChanged: function() {
         this.quoteUtils.logDebug("onQuotesListChanged");
 
+        // if a YFQ query is currently running, do short-circuit here
         if (this.updateInProgress) {
             this.quoteUtils.logDebug("Data refresh in progress");
             return;
@@ -1241,12 +1238,13 @@ StockQuoteDesklet.prototype = {
             _that.quoteUtils.logDebug("YF query response: " + response);
             try {
                 let parsedResponse = JSON.parse(response);
-                _lastResponses.set(_that.id, {
+                _that.lastResponse = {
                     symbolsArgument: quoteSymbolsArg,
                     responseResult: parsedResponse.quoteResponse.result,
                     responseError: parsedResponse.quoteResponse.error,
                     lastUpdated: new Date()
-                });
+                };
+
                 _that.setUpdateTimer(instantTimer);
                 _that.render();
             } catch (e) {
@@ -1347,12 +1345,13 @@ StockQuoteDesklet.prototype = {
     processFailedFetch: function(errorMessage, symbolsArg = "") {
         this.quoteUtils.logDebug("processFailedFetch, errorMessage: " + errorMessage);
         const errorResponse = JSON.parse(this.quoteReader.buildErrorResponse(errorMessage));
-        _lastResponses.set(this.id, {
+        this.lastResponse = {
             symbolsArgument: symbolsArg,
             responseResult: errorResponse.quoteResponse.result,
             responseError: errorResponse.quoteResponse.error,
             lastUpdated: new Date()
-        });
+        };
+
         this.setUpdateTimer();
         this.render();
     },
@@ -1371,19 +1370,13 @@ StockQuoteDesklet.prototype = {
         }
     },
 
-    // main method to render the desklet, expects desklet id in _lastResponses map
+    // main method to render the desklet
     render: function() {
         this.quoteUtils.logDebug("render");
-        let existingId = "default";
-        this.quoteUtils.logDebug("_lastResponses size: " + _lastResponses.size);
-        if (_lastResponses.has(this.id)) {
-            this.quoteUtils.logDebug("last response exists");
-            existingId = this.id;
-        }
 
         // check if quotes list was changed but no call of onQuotesListChanged() occurred, e.g. on layout changes
         if (this.hasRemainingAuthAttempts() &&
-            !this.quoteUtils.compareSymbolsArgument(_lastResponses.get(existingId).symbolsArgument, this.quoteSymbolsText)) {
+            !this.quoteUtils.compareSymbolsArgument(this.lastResponse.symbolsArgument, this.quoteSymbolsText)) {
             this.quoteUtils.logDebug("Detected changed quotes list, refreshing data");
             this.onQuotesListChanged();
             return;
@@ -1397,12 +1390,12 @@ StockQuoteDesklet.prototype = {
         });
 
         // in case of errors, show details
-        const responseError = _lastResponses.get(existingId).responseError;
+        const responseError = this.lastResponse.responseError;
         if (responseError !== null) {
             tableContainer.add_actor(this.createErrorLabel(responseError));
         }
 
-        const responseResult = _lastResponses.get(existingId).responseResult;
+        const responseResult = this.lastResponse.responseResult;
         if (responseResult !== null) {
             const symbolCustomizationMap = this.quoteUtils.buildSymbolCustomizationMap(this.quoteSymbolsText);
 
@@ -1432,7 +1425,7 @@ StockQuoteDesklet.prototype = {
             tableContainer.add_actor(table.el);
 
             if (this.showLastUpdateTimestamp) {
-                tableContainer.add_actor(this.createLastUpdateLabel(_lastResponses.get(existingId).lastUpdated, displaySettings));
+                tableContainer.add_actor(this.createLastUpdateLabel(this.lastResponse.lastUpdated, displaySettings));
             }
         }
 
@@ -1459,8 +1452,6 @@ StockQuoteDesklet.prototype = {
         this.quoteUtils.logDebug("on_desklet_removed");
         this.removeUpdateTimer();
         this.unrender();
-        // remove cached response for this instance
-        _lastResponses.delete(this.id);
     },
 
     unrender: function() {
@@ -1475,12 +1466,16 @@ StockQuoteDesklet.prototype = {
         this.quoteUtils.logDebug("removeUpdateTimer, updateId: " + this.updateId);
         if (this.updateId > 0) {
             GLib.source_remove(this.updateId);
+            this.quoteUtils.logDebug("removeUpdateTimer, timer removed for updateId: " + this.updateId);
         }
         this.updateId = 0;
         this.updateInProgress = true;
     }
 };
 
-function main(metadata, id) {
-    return new StockQuoteDesklet(metadata, id);
+function main(metadata, deskletId) {
+    if (LOG_DEBUG) {
+        global.log(UUID + "[" + deskletId + "] DEBUG main()");
+    }
+    return new StockQuoteDesklet(metadata, deskletId);
 }

@@ -1,8 +1,4 @@
-<<<<<<< Upstream, based on gitlab/main
 ### 0.16.2 - July 16, 2025
-=======
-### 0.16.1 - May 20, 2025
->>>>>>> 5ab1b6b evaluate curl response for errors
 
 Features:
 
