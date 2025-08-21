@@ -1,7 +1,8 @@
-### 0.16.2 - July 16, 2025
+### 0.17.0 - August 21, 2025
 
 Features:
 
+- new setting to cache authorization parameters (enabled by default)
 - manage separate authorization parameters for each desklet instance
 - evaluate curl response for errors
 - improve debug logs
