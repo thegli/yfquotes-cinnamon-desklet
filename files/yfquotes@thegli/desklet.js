@@ -16,6 +16,8 @@ const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 // Gtk library (policies for scrollview)
 const Gtk = imports.gi.Gtk;
+// text layouting and rendering
+const Pango = imports.gi.Pango;
 const Soup = imports.gi.Soup;
 const ByteArray = imports.byteArray;
 // Binding desklet to mainloop function
@@ -719,7 +721,7 @@ YahooFinanceQuoteReader.prototype = {
                     callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true, true);
                 } else {
                     _that.quoteUtils.logWarning("Curl Error retrieving url " + requestUrl + ". Status: " + _that.quoteUtils.getMessageStatusInfo(curlMessage));
-                    callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(curlMessage)));
+                    callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: ") + _that.quoteUtils.getMessageStatusInfo(curlMessage)));
                 }
             });
         } else {
@@ -745,7 +747,7 @@ YahooFinanceQuoteReader.prototype = {
                         callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true, true);
                     } else {
                         _that.quoteUtils.logWarning("Error retrieving url " + requestUrl + ". Status: " + _that.quoteUtils.getMessageStatusInfo(message));
-                        callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(message)));
+                        callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: ") + _that.quoteUtils.getMessageStatusInfo(message)));
                     }
                 });
             } else {
@@ -768,7 +770,7 @@ YahooFinanceQuoteReader.prototype = {
                         callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true, true);
                     } else {
                         _that.quoteUtils.logWarning("Error retrieving url " + requestUrl + ". Status: " + _that.quoteUtils.getMessageStatusInfo(message));
-                        callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available!\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(message)));
+                        callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: ") + _that.quoteUtils.getMessageStatusInfo(message)));
                     }
                 });
             }
@@ -1224,10 +1226,16 @@ StockQuoteDesklet.prototype = {
         const errorMsg = _("Error: ") + JSON.stringify(responseError);
         this.quoteUtils.logWarning(errorMsg);
 
-        return new St.Label({
+        const errorLabel = new St.Label({
             text: errorMsg,
             style_class: "error-label"
         });
+        const clutterText = errorLabel.clutter_text;
+        clutterText.line_wrap = true;
+        clutterText.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
+        clutterText.ellipsize = Pango.EllipsizeMode.NONE;
+        
+        return errorLabel;
     },
 
     // called on events that change the desklet window
@@ -1365,7 +1373,7 @@ StockQuoteDesklet.prototype = {
             } else {
                 _that.quoteUtils.logWarning("Failed to retrieve auth cookie!");
                 _that.authAttempts++;
-                _that.processFailedFetch(_("Failed to retrieve authorization parameter! Unable to fetch quotes data.\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(authResponseMessage));
+                _that.processFailedFetch(_("Failed to retrieve authorization parameter! Unable to fetch quotes data. Status: ") + _that.quoteUtils.getMessageStatusInfo(authResponseMessage));
             }
         });
     },
@@ -1392,13 +1400,13 @@ StockQuoteDesklet.prototype = {
                 } else {
                     _that.quoteUtils.logWarning("Failed to retrieve auth cookie from consent form");
                     _that.authAttempts++;
-                    _that.processFailedFetch(_("Consent processing failed! Unable to fetch quotes data.\\nStatus: ") + _that.quoteUtils.getMessageStatusInfo(consentResponseMessage));
+                    _that.processFailedFetch(_("Consent processing failed! Unable to fetch quotes data. Status: ") + _that.quoteUtils.getMessageStatusInfo(consentResponseMessage));
                 }
             });
         } else {
             this.quoteUtils.logWarning("Consent form not detected");
             this.authAttempts++;
-            this.processFailedFetch(_("Consent processing not completed! Unable to fetch quotes data.\\nStatus: ") + this.quoteUtils.getMessageStatusInfo(authResponseMessage));;
+            this.processFailedFetch(_("Consent processing not completed! Unable to fetch quotes data. Status: ") + this.quoteUtils.getMessageStatusInfo(authResponseMessage));;
         }
     },
 
@@ -1434,7 +1442,7 @@ StockQuoteDesklet.prototype = {
                 _that.quoteUtils.logWarning("Failed to retrieve crumb!");
                 _that.authAttempts++;
                 _that.saveAuthorizationParameters(true);
-                _that.processFailedFetch(_('Failed to retrieve authorization crumb! Unable to fetch quotes data.\\nStatus: ') + _that.quoteUtils.getMessageStatusInfo(crumbResponseMessage));
+                _that.processFailedFetch(_('Failed to retrieve authorization crumb! Unable to fetch quotes data. Status: ') + _that.quoteUtils.getMessageStatusInfo(crumbResponseMessage));
             }
         });
     },
