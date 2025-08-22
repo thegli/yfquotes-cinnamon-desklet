@@ -109,23 +109,23 @@ CurlMessage.prototype = {
     init: function(response) {
         const responseParts = response.split(CURL_RESPONSE_CODE_PREFIX);
         this.response_body = responseParts[0];
-        this.status_code = responseParts[1];
+        this.status_code = Number(responseParts[1]);
         this.reason_phrase = this.determineReasonPhrase(this.status_code);
     },
 
     determineReasonPhrase: function(statusCode) {
         switch (statusCode) {
-            case '200': return "OK";
-            case '400': return "Bad Request";
-            case '401': return "Unauthorized";
-            case '403': return "Forbidden";
-            case '404': return "Not Found";
-            case '422': return "Unprocessable Content";
-            case '429': return "Too Many Requests";
-            case '500': return "Internal Server Error";
-            case '502': return "Bad Gateway";
-            case '503': return "Service Unavailable";
-            case '504': return "Gateway Timeout";
+            case 200: return "OK";
+            case 400: return "Bad Request";
+            case 401: return "Unauthorized";
+            case 403: return "Forbidden";
+            case 404: return "Not Found";
+            case 422: return "Unprocessable Content";
+            case 429: return "Too Many Requests";
+            case 500: return "Internal Server Error";
+            case 502: return "Bad Gateway";
+            case 503: return "Service Unavailable";
+            case 504: return "Gateway Timeout";
             default: return "Unknown reason";
         }
     },
@@ -366,7 +366,7 @@ YahooFinanceQuoteReader.prototype = {
                             value: IS_SOUP_2 ? authCookie.value : authCookie.get_value(),
                             domain: IS_SOUP_2 ? authCookie.domain : authCookie.get_domain(),
                             path: IS_SOUP_2 ? authCookie.path : authCookie.get_path(),
-                            expires: expiresDateTime ? expiresDateTime.to_unix() : -1
+                            expires: expiresDateTime ? (IS_SOUP_2 ? expiresDateTime.to_time_t() : expiresDateTime.to_unix()) : -1
                         },
                         crumb: {
                             value: this.getCrumb()
@@ -396,10 +396,10 @@ YahooFinanceQuoteReader.prototype = {
             this.addCookieToJar(cachedAuthParams.cookie);
             this.setCrumb(cachedAuthParams.crumb.value);
 
-            this.quoteUtils.logDebug("Restored cached authorization parameters: " + Object.entries(cachedAuthParams));
+            this.quoteUtils.logDebug("Restored cached authorization parameters");
         } else {
             // either no params cached, or version mismatch
-            this.quoteUtils.logDebug("No cached authorization parameters restored: " + Object.entries(cachedAuthParams));
+            this.quoteUtils.logDebug("No cached authorization parameters restored");
         }
     },
 
@@ -443,7 +443,7 @@ YahooFinanceQuoteReader.prototype = {
             }
         }
 
-        this.quoteUtils.logDebug("No cookie found with name: " + name);
+        this.quoteUtils.logDebug("No cookie found with name " + name);
         return null;
     },
 
@@ -454,12 +454,7 @@ YahooFinanceQuoteReader.prototype = {
     addCookieToJar: function(cookieParams) {
         const cookie = new Soup.Cookie(cookieParams.name, cookieParams.value, cookieParams.domain, cookieParams.path, -1);
         if (cookieParams.expires > 0) {
-            const expiresDateTime = GLib.DateTime.new_from_unix_utc(cookieParams.expires);
-            if (IS_SOUP_2) {
-                cookie.expires = expiresDateTime;
-            } else {
-                cookie.set_expires = expiresDateTime;
-            }
+            cookie.set_expires(IS_SOUP_2 ? Soup.Date.new_from_time_t(cookieParams.expires) : GLib.DateTime.new_from_unix_utc(cookieParams.expires));
         }
         this.cookieJar.add_cookie(cookie);
         this.quoteUtils.logDebug("Added cookie to jar: " + Object.entries(cookieParams));
