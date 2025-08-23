@@ -1,3 +1,9 @@
+### 0.17.2 - tbd
+
+Bugfixes:
+
+- capture and display curl errors
+
 ### 0.17.1 - August 22, 2025
 
 Bugfixes:
