@@ -1306,7 +1306,7 @@ StockQuoteDesklet.prototype = {
         this.authAttempts = 0;
         this.quoteReader.dropAuthParams();
         this.saveAuthorizationParameters(true);
-        this.quoteUtils.logInfo("Dropped all autborization parameters");
+        this.quoteUtils.logInfo("Dropped all authorization parameters");
 
         this.removeUpdateTimer();
         this.setUpdateTimer(true);
