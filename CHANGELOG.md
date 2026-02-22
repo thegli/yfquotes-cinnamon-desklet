@@ -1,3 +1,10 @@
+### 0.18.1 - NEXT
+
+Bugfixes:
+
+- remove dependency to bash for curl invocation
+- remove usage of non-standard String.prototype.format
+
 ### 0.18.0 - February 20, 2026
 
 Features:
