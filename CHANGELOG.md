@@ -1,9 +1,14 @@
-### 0.18.1 - NEXT
+### 0.18.1 - February 22, 2026
+
+Features:
+
+- update Spanish translation (courtesy of [haggen88](https://github.com/haggen88))
 
 Bugfixes:
 
-- remove dependency to bash for curl invocation
-- remove usage of non-standard String.prototype.format
+- re-add fields filter to reduce amount of received data
+- improve debug and error logging
+- overall refactoring and code cleanup
 
 ### 0.18.0 - February 20, 2026
 
