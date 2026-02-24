@@ -653,7 +653,7 @@ YahooFinanceQuoteReader.prototype = {
             curlArgs.push(YF_CRUMB_URL);
             this.quoteUtils.logDebug(`retrieveCrumbWithCurl - arguments: ${JSON.stringify(curlArgs)}`);
 
-            let subProcess = spawnCommandLineAsyncIO("", (stdout, stderr, exitCode) => {
+            spawnCommandLineAsyncIO("", (stdout, stderr, exitCode) => {
                 _that.quoteUtils.logDebug(`retrieveCrumbWithCurl - result: exitCode: ${exitCode}. stdout: ${stdout}. stderr: ${stderr}`);
                 if (exitCode === 0) {
                     const curlMessage = new CurlMessage(stdout);
@@ -670,12 +670,6 @@ YahooFinanceQuoteReader.prototype = {
                 } else {
                     _that.quoteUtils.logError(`Curl retrieveCrumb error: Exit code: ${exitCode}. Out: ${stdout ? stdout.trim() : ""}. Err: ${stderr ? stderr.trim() : ""}`);
                     callback.call(_that, null, null);
-                }
-
-                try {
-                    subProcess.send_signal(9);
-                } catch (err) {
-                    _that.quoteUtils.logDebug(`retrieveCrumbWithCurl - failed to send signal to subprocess: ${err}`);
                 }
             }, { argv: curlArgs });
         } else {
@@ -787,7 +781,7 @@ YahooFinanceQuoteReader.prototype = {
         curlArgs.push(requestUrl);
         this.quoteUtils.logDebug(`retrieveFinanceDataWithCurl - arguments: ${JSON.stringify(curlArgs)}`);
 
-        let subProcess = spawnCommandLineAsyncIO("", (stdout, stderr, exitCode) => {
+        spawnCommandLineAsyncIO("", (stdout, stderr, exitCode) => {
             _that.quoteUtils.logDebug(`retrieveFinanceDataWithCurl - exitCode: ${exitCode}. stdout: ${stdout}. stderr: ${stderr}`);
             if (exitCode === 0) {
                 const curlMessage = new CurlMessage(stdout);
@@ -808,12 +802,6 @@ YahooFinanceQuoteReader.prototype = {
             } else {
                 _that.quoteUtils.logError(`Curl retrieveFinanceData error: Exit code: ${exitCode}. Out: ${stdout ? stdout.trim() : ""}. Err: ${stderr ? stderr.trim() : ""}`);
                 callback.call(_that, _that.buildErrorResponse(_("Something went wrong retrieving Yahoo Finance data") + ". " + stderr));
-            }
-
-            try {
-                subProcess.send_signal(9);
-            } catch (err) {
-                _that.quoteUtils.logDebug(`retrieveFinanceDataWithCurl - failed to send signal to subprocess: ${err}`);
             }
         }, { argv: curlArgs });
     },
