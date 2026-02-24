@@ -188,8 +188,8 @@ YahooFinanceQuoteUtils.prototype = {
     },
 
     // convert the quotes list to a comma-separated one-liner, to be used as argument for the YFQ "symbols" parameter
-    buildSymbolsArgument(quoteSymbolsText) {
-        return quoteSymbolsText
+    buildSymbolsArgument(quoteSymbols) {
+        return quoteSymbols
             .split("\n")
             .map((line) => line.trim())
             .filter((line) => line !== "")
@@ -198,9 +198,9 @@ YahooFinanceQuoteUtils.prototype = {
     },
 
     // extract any customization parameters from each entry in the quotes list, and return them in a map
-    buildSymbolCustomizationMap(quoteSymbolsText) {
+    buildSymbolCustomizationMap(quoteSymbols) {
         const symbolCustomizations = new Map();
-        for (const line of quoteSymbolsText.trim().split("\n")) {
+        for (const line of quoteSymbols.trim().split("\n")) {
             const customization = this.parseSymbolLine(line);
             symbolCustomizations.set(customization.symbol, customization);
         }
@@ -234,8 +234,8 @@ YahooFinanceQuoteUtils.prototype = {
         }
     },
 
-    compareSymbolsArgument(symbolsArgument, quoteSymbolsText) {
-        const argumentFromText = this.buildSymbolsArgument(quoteSymbolsText);
+    compareSymbolsArgument(symbolsArgument, quoteSymbols) {
+        const argumentFromText = this.buildSymbolsArgument(quoteSymbols);
         this.logDebug(`compareSymbolsArgument - compare symbolsArgument(${symbolsArgument}) with argumentFromText(${argumentFromText})`);
         return symbolsArgument === argumentFromText;
     },
@@ -331,7 +331,7 @@ YahooFinanceQuoteUtils.prototype = {
             if (p1 < p2) {
                 return -1 * direction;
             } else if (p1 > p2) {
-                return 1 * direction;
+                return direction;
             } else {
                 return 0;
             }
@@ -1012,7 +1012,7 @@ QuotesTable.prototype = {
             if (this.quoteUtils.existsProperty(quote, "marketState")) {
                 marketState = quote.marketState;
             }
-            
+
             // check first if market is currently open
             if (marketState === "REGULAR") {
                 return DEFAULT_MARKET_STATE;
@@ -1027,7 +1027,7 @@ QuotesTable.prototype = {
             if (marketState.includes("POST") && this.quoteUtils.existsProperty(quote, "postMarketTime")) {
                 return "post";
             }
-            
+
             // other market states such as CLOSED (e.g. on weekends) are ignored and treated as regular
         }
 
@@ -1279,53 +1279,33 @@ StockQuoteDesklet.prototype = {
     },
 
     loadSettings() {
+        const displaySettings = ["height", "width", "transparency", "backgroundColor", "cornerRadius",
+            "borderWidth", "borderColor"];
+        const renderSettings = ["showVerticalScrollbar", "showLastUpdateTimestamp", "manualDataUpdate",
+            "roundNumbers", "decimalPlaces", "strictRounding", "use24HourTime", "customTimeFormat",
+            "customDateFormat", "sortCriteria", "sortDirection", "showChangeIcon", "showQuoteName",
+            "useLongQuoteName", "linkQuoteName", "showQuoteSymbol", "linkQuoteSymbol", "showMarketPrice",
+            "showCurrencyCode", "showAbsoluteChange", "showPercentChange", "colorPercentChange",
+            "showTradeTime", "includePrePostMarketDataOption", "fontColor", "scaleFontSize", "fontScale",
+            "fontStylePrePostMarketData", "uptrendChangeColor", "downtrendChangeColor", "unchangedTrendColor"];
+        const dataFetchSettings = ["delayMinutes"];
+        const manualRefreshSettings = ["quoteSymbols", "cacheAuthorizationParameters", "authorizationParameters",
+            "sendCustomUserAgent", "customUserAgent", "enableCurl", "curlCommand"];
+
         this.settings = new Settings.DeskletSettings(this, this.metadata.uuid, this.id);
-        this.settings.bind("height", "height", this.onDisplaySettingChanged);
-        this.settings.bind("width", "width", this.onDisplaySettingChanged);
-        this.settings.bind("transparency", "transparency", this.onDisplaySettingChanged);
-        this.settings.bind("showVerticalScrollbar", "showVerticalScrollbar", this.onRenderSettingsChanged);
-        this.settings.bind("backgroundColor", "backgroundColor", this.onDisplaySettingChanged);
-        this.settings.bind("cornerRadius", "cornerRadius", this.onDisplaySettingChanged);
-        this.settings.bind("borderWidth", "borderWidth", this.onDisplaySettingChanged);
-        this.settings.bind("borderColor", "borderColor", this.onDisplaySettingChanged);
-        this.settings.bind("delayMinutes", "delayMinutes", this.onDataFetchSettingsChanged);
-        this.settings.bind("showLastUpdateTimestamp", "showLastUpdateTimestamp", this.onRenderSettingsChanged);
-        this.settings.bind("manualDataUpdate", "manualDataUpdate", this.onRenderSettingsChanged);
-        this.settings.bind("roundNumbers", "roundNumbers", this.onRenderSettingsChanged);
-        this.settings.bind("decimalPlaces", "decimalPlaces", this.onRenderSettingsChanged);
-        this.settings.bind("strictRounding", "strictRounding", this.onRenderSettingsChanged);
-        this.settings.bind("use24HourTime", "use24HourTime", this.onRenderSettingsChanged);
-        this.settings.bind("customTimeFormat", "customTimeFormat", this.onRenderSettingsChanged);
-        this.settings.bind("customDateFormat", "customDateFormat", this.onRenderSettingsChanged);
-        this.settings.bind("quoteSymbols", "quoteSymbolsText"); // no callback, manual refresh required
-        this.settings.bind("sortCriteria", "sortCriteria", this.onRenderSettingsChanged);
-        this.settings.bind("sortDirection", "sortAscending", this.onRenderSettingsChanged);
-        this.settings.bind("showChangeIcon", "showChangeIcon", this.onRenderSettingsChanged);
-        this.settings.bind("showQuoteName", "showQuoteName", this.onRenderSettingsChanged);
-        this.settings.bind("useLongQuoteName", "useLongQuoteName", this.onRenderSettingsChanged);
-        this.settings.bind("linkQuoteName", "linkQuoteName", this.onRenderSettingsChanged);
-        this.settings.bind("showQuoteSymbol", "showQuoteSymbol", this.onRenderSettingsChanged);
-        this.settings.bind("linkQuoteSymbol", "linkQuoteSymbol", this.onRenderSettingsChanged);
-        this.settings.bind("showMarketPrice", "showMarketPrice", this.onRenderSettingsChanged);
-        this.settings.bind("showCurrencyCode", "showCurrencyCode", this.onRenderSettingsChanged);
-        this.settings.bind("showAbsoluteChange", "showAbsoluteChange", this.onRenderSettingsChanged);
-        this.settings.bind("showPercentChange", "showPercentChange", this.onRenderSettingsChanged);
-        this.settings.bind("colorPercentChange", "colorPercentChange", this.onRenderSettingsChanged);
-        this.settings.bind("showTradeTime", "showTradeTime", this.onRenderSettingsChanged);
-        this.settings.bind("includePrePostMarketDataOption", "includePrePostMarketDataOption", this.onRenderSettingsChanged);
-        this.settings.bind("fontColor", "fontColor", this.onRenderSettingsChanged);
-        this.settings.bind("scaleFontSize", "scaleFontSize", this.onRenderSettingsChanged);
-        this.settings.bind("fontScale", "fontScale", this.onRenderSettingsChanged);
-        this.settings.bind("fontStylePrePostMarketData", "fontStylePrePostMarketData", this.onRenderSettingsChanged);
-        this.settings.bind("uptrendChangeColor", "uptrendChangeColor", this.onRenderSettingsChanged);
-        this.settings.bind("downtrendChangeColor", "downtrendChangeColor", this.onRenderSettingsChanged);
-        this.settings.bind("unchangedTrendColor", "unchangedTrendColor", this.onRenderSettingsChanged);
-        this.settings.bind("cacheAuthorizationParameters", "cacheAuthorizationParameters"); // no callback, manual refresh required
-        this.settings.bind("authorizationParameters", "authorizationParameters"); // no callback, manual refresh required
-        this.settings.bind("sendCustomUserAgent", "sendCustomUserAgent"); // no callback, manual refresh required
-        this.settings.bind("customUserAgent", "customUserAgent");  // no callback, manual refresh required
-        this.settings.bind("enableCurl", "enableCurl"); // no callback, manual refresh required
-        this.settings.bind("curlCommand", "curlCommand"); // no callback, manual refresh required
+        displaySettings.forEach(setting => {
+            this.settings.bind(setting, setting, this.onDisplaySettingChanged);
+        });
+        renderSettings.forEach(setting => {
+            this.settings.bind(setting, setting, this.onRenderSettingsChanged);
+        });
+        dataFetchSettings.forEach(setting => {
+            this.settings.bind(setting, setting, this.onDataFetchSettingsChanged);
+        });
+        manualRefreshSettings.forEach(setting => {
+            // no callback, manual refresh required
+            this.settings.bind(setting, setting);
+        });
     },
 
     getQuoteDisplaySettings(quotes) {
@@ -1510,7 +1490,7 @@ StockQuoteDesklet.prototype = {
         // stop timer, a new one will be created in fetchFinanceDataAndRender()
         this.removeUpdateTimer();
 
-        const quoteSymbolsArg = this.quoteUtils.buildSymbolsArgument(this.quoteSymbolsText);
+        const quoteSymbolsArg = this.quoteUtils.buildSymbolsArgument(this.quoteSymbols);
         const networkSettings = this.getNetworkSettings();
 
         try {
@@ -1717,7 +1697,7 @@ StockQuoteDesklet.prototype = {
 
         // check if quotes list was changed but no call of onQuotesListChanged() occurred, e.g. on layout changes
         if (this.hasRemainingAuthAttempts() &&
-            !this.quoteUtils.compareSymbolsArgument(this.lastResponse.symbolsArgument, this.quoteSymbolsText)) {
+            !this.quoteUtils.compareSymbolsArgument(this.lastResponse.symbolsArgument, this.quoteSymbols)) {
             this.quoteUtils.logDebug("render - detected changed quotes list, initiate data refresh");
             this.onQuotesListChanged();
             return;
@@ -1738,7 +1718,7 @@ StockQuoteDesklet.prototype = {
 
         const responseResult = this.lastResponse.responseResult;
         if (responseResult != null) {
-            const symbolCustomizationMap = this.quoteUtils.buildSymbolCustomizationMap(this.quoteSymbolsText);
+            const symbolCustomizationMap = this.quoteUtils.buildSymbolCustomizationMap(this.quoteSymbols);
 
             // some preparations before the rendering starts
             for (const quote of responseResult) {
@@ -1755,7 +1735,7 @@ StockQuoteDesklet.prototype = {
             }
 
             // (optional) sorting (do after we populated the display name within the quotes)
-            const sortedResponseResult = this.quoteUtils.sortQuotesByProperty(responseResult, this.sortCriteria, this.sortAscending ? 1 : -1);
+            const sortedResponseResult = this.quoteUtils.sortQuotesByProperty(responseResult, this.sortCriteria, this.sortDirection ? 1 : -1);
 
             // gather all settings that influence the rendering
             const displaySettings = this.getQuoteDisplaySettings(sortedResponseResult);
