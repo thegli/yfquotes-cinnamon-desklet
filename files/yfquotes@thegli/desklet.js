@@ -797,11 +797,11 @@ YahooFinanceQuoteReader.prototype = {
                     callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true, true);
                 } else {
                     _that.quoteUtils.logWarning(`Curl Error retrieving url ${requestUrl}. Status: ${_that.quoteUtils.getMessageStatusInfo(curlMessage)}`);
-                    callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: ") + _that.quoteUtils.getMessageStatusInfo(curlMessage)));
+                    callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: %s").format(_that.quoteUtils.getMessageStatusInfo(curlMessage))));
                 }
             } else {
                 _that.quoteUtils.logError(`Curl retrieveFinanceData error: Exit code: ${exitCode}. Out: ${stdout ? stdout.trim() : ""}. Err: ${stderr ? stderr.trim() : ""}`);
-                callback.call(_that, _that.buildErrorResponse(_("Something went wrong retrieving Yahoo Finance data") + ". " + stderr));
+                callback.call(_that, _that.buildErrorResponse(_("Something went wrong retrieving Yahoo Finance data. %s").format(stderr)));
             }
         }, { argv: curlArgs });
     },
@@ -830,7 +830,7 @@ YahooFinanceQuoteReader.prototype = {
                 callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true, true);
             } else {
                 _that.quoteUtils.logWarning(`Soup2 Error retrieving url ${requestUrl}. Status: ${_that.quoteUtils.getMessageStatusInfo(message)}`);
-                callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: ") + _that.quoteUtils.getMessageStatusInfo(message)));
+                callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: %s").format(_that.quoteUtils.getMessageStatusInfo(message))));
             }
         });
     },
@@ -860,7 +860,7 @@ YahooFinanceQuoteReader.prototype = {
                 callback.call(_that, _that.buildErrorResponse(_("Authorization parameters have expired")), true, true);
             } else {
                 _that.quoteUtils.logWarning(`Soup3 Error retrieving url ${requestUrl}. Status: ${_that.quoteUtils.getMessageStatusInfo(message)}`);
-                callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: ") + _that.quoteUtils.getMessageStatusInfo(message)));
+                callback.call(_that, _that.buildErrorResponse(_("Yahoo Finance service not available! Status: %s").format(_that.quoteUtils.getMessageStatusInfo(message))));
             }
         });
     },
@@ -1360,7 +1360,7 @@ StockQuoteDesklet.prototype = {
 
     createLastUpdateLabel(lastUpdated, settings) {
         const label = new St.Label({
-            text: _("Updated at ") + this.formatCurrentTimestamp(lastUpdated, settings),
+            text: _("Updated at %s").format(this.formatCurrentTimestamp(lastUpdated, settings)),
             style_class: "quotes-last-update",
             reactive: this.manualDataUpdate,
             style: "color: " + settings.fontColor + "; " + (settings.fontSize > 0 ? "font-size: " + settings.fontSize + "px;" : "")
@@ -1392,7 +1392,7 @@ StockQuoteDesklet.prototype = {
     },
 
     createErrorLabel(responseError) {
-        const errorMsg = _("Error: ") + JSON.stringify(responseError);
+        const errorMsg = _("Error: %s").format(JSON.stringify(responseError));
         this.quoteUtils.logWarning(errorMsg);
 
         const errorLabel = new St.Label({
@@ -1551,7 +1551,7 @@ StockQuoteDesklet.prototype = {
             } else {
                 _that.quoteUtils.logWarning("Failed to retrieve auth cookie!");
                 _that.authAttempts++;
-                _that.processFailedFetch(_("Failed to retrieve authorization parameter! Unable to fetch quotes data. Status: ") + _that.quoteUtils.getMessageStatusInfo(authResponseMessage));
+                _that.processFailedFetch(_("Failed to retrieve authorization parameter! Unable to fetch quotes data. Status: %s").format(that.quoteUtils.getMessageStatusInfo(authResponseMessage)));
             }
         });
     },
@@ -1582,13 +1582,13 @@ StockQuoteDesklet.prototype = {
                 } else {
                     _that.quoteUtils.logWarning("Failed to retrieve auth cookie from consent form");
                     _that.authAttempts++;
-                    _that.processFailedFetch(_("Consent processing failed! Unable to fetch quotes data. Status: ") + _that.quoteUtils.getMessageStatusInfo(consentResponseMessage));
+                    _that.processFailedFetch(_("Consent processing failed! Unable to fetch quotes data. Status: %s").format(_that.quoteUtils.getMessageStatusInfo(consentResponseMessage)));
                 }
             });
         } else {
             this.quoteUtils.logWarning("Consent form not detected");
             this.authAttempts++;
-            this.processFailedFetch(_("Consent processing not completed! Unable to fetch quotes data. Status: ") + this.quoteUtils.getMessageStatusInfo(authResponseMessage));
+            this.processFailedFetch(_("Consent processing not completed! Unable to fetch quotes data. Status: %s").format(this.quoteUtils.getMessageStatusInfo(authResponseMessage)));
         }
     },
 
@@ -1624,7 +1624,7 @@ StockQuoteDesklet.prototype = {
                 _that.quoteUtils.logWarning("Failed to retrieve crumb!");
                 _that.authAttempts++;
                 _that.saveAuthorizationParameters(true);
-                _that.processFailedFetch(_("Failed to retrieve authorization crumb! Unable to fetch quotes data. Status: ") + _that.quoteUtils.getMessageStatusInfo(crumbResponseMessage));
+                _that.processFailedFetch(_("Failed to retrieve authorization crumb! Unable to fetch quotes data. Status: %s").format(_that.quoteUtils.getMessageStatusInfo(crumbResponseMessage)));
             }
         });
     },
