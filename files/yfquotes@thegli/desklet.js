@@ -955,10 +955,10 @@ QuotesTable.prototype = {
         }
 
         if (settings.quoteName) {
-            cellContents.push(this.createQuoteLabel(quote.displayName, symbolCustomization, settings.quoteLabelWidth, settings));
+            cellContents.push(this.createQuoteLabel(quote.displayName, symbolCustomization, settings.quoteLabelWidth, settings.linkQuote, settings));
         }
         if (settings.quoteSymbol) {
-            cellContents.push(this.createQuoteLabel(symbol, symbolCustomization, settings.quoteSymbolWidth, settings));
+            cellContents.push(this.createQuoteLabel(symbol, symbolCustomization, settings.quoteSymbolWidth, settings.linkSymbol, settings));
         }
 
         // keep regular unless values should be replaced with pre-/post market values
@@ -1042,21 +1042,21 @@ QuotesTable.prototype = {
         return marketState + suffix;
     },
 
-    createQuoteLabel(labelText, symbolCustomization, width, settings) {
+    createQuoteLabel(labelText, symbolCustomization, width, withLink, settings) {
         const label = new St.Label({
             text: labelText,
             style_class: "quotes-label",
-            reactive: settings.linkQuote,
+            reactive: withLink,
             style: "width:" + width + "em; " + this.buildCustomStyle(settings, symbolCustomization)
         });
 
-        if (settings.linkQuote) {
-            const symbolButton = new St.Button();
-            symbolButton.add_actor(label);
-            symbolButton.connect("clicked", () => {
+        if (withLink) {
+            const linkButton = new St.Button();
+            linkButton.add_actor(label);
+            linkButton.connect("clicked", () => {
                 Gio.app_info_launch_default_for_uri(YF_QUOTE_WEBPAGE_URL + encodeURIComponent(symbolCustomization.symbol), global.create_app_launch_context());
             });
-            return symbolButton;
+            return linkButton;
         } else {
             return label;
         }
